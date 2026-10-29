@@ -1,16 +1,38 @@
-# React + Vite
+#  Aurora Seguros - Cotizador UX/UI Interactivo
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Prototipo de aplicación web desarrollado en **React** y **Vite**, diseñado bajo los principios heurísticos de usabilidad de Jakob Nielsen. Su objetivo principal es optimizar la experiencia de usuario en el embudo de conversión inicial de una aseguradora, reduciendo la fricción, el abandono y mejorando la claridad en el proceso de contratación.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+##  Características Principales
 
-## React Compiler
+* **Pantalla de Bienvenida Minimalista:** Interfaz de inicio inmersiva con centrado dinámico, instrucciones claras y alta accesibilidad visual.
+* **Navegación "Linear-Flexible":** Permite al usuario avanzar, retroceder y modificar sus respuestas en cualquier momento sin perder la información previamente ingresada.
+* **Indicador de Progreso en Vivo:** Barra de avance porcentual y un *stepper* interactivo de 6 pasos claros:
+  1. *Filtrar* (Datos iniciales y tipo de plan).
+  2. *Explorar* (Categorías y perfiles de decisión).
+  3. *Elegir* (Descarga de cotización o continuidad de compra).
+  4. *Validar* (Datos del tomador, declaración de salud y autenticación OTP).
+  5. *Pagar* (Simulación de pasarela de pago segura).
+  6. *Confirmar* (Resumen final y modal interactiva de evaluación de experiencia).
+* **Diseño Responsivo y Accesible:** Estilizado con **React-Bootstrap** y componentes personalizados adaptados para dispositivos móviles y de escritorio.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+##  Tecnologías Utilizadas
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+* **React** (v18+) - Biblioteca principal para la construcción de la interfaz.
+* **Vite** - Herramienta de empaquetado rápido y entorno de desarrollo.
+* **React-Bootstrap & Bootstrap** - Sistema de componentes UI y rejilla responsiva.
+* **Oxlint** - Reglas de análisis de código para mantener buenas prácticas.
+
+---
+
+##  Guía de Instalación y Ejecución Local
+
+Sigue estos pasos para clonar y ejecutar el proyecto en tu máquina local:
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone <url-de-tu-repositorio>
+   cd <nombre-del-proyecto>
