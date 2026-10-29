@@ -16,6 +16,8 @@ import {
   Modal,
   Tab,
   Tabs,
+  Toast,
+  ToastContainer,
 } from "react-bootstrap";
 
 import "./App.css";
@@ -480,7 +482,7 @@ function StepSix({ data, updateData }) {
         <Form.Text id="ratingHelp">1 = Muy difícil · 5 = Excelente</Form.Text>
       </fieldset>
       <Form.Group controlId="feedback" className="mt-3">
-        <Form.Label>Comcríbenos tus comentarios o sugerencias (opcional)</Form.Label>
+        <Form.Label>Comentarios o sugerencias (opcional)</Form.Label>
         <Form.Control as="textarea" rows={3} value={data.feedback} onChange={(e) => updateData("feedback", e.target.value)} placeholder="¿Hay algo que podríamos haber hecho mejor?" />
       </Form.Group>
     </section>
@@ -610,37 +612,108 @@ export default function App() {
   });
 
   const updateData = (field, value) => setData((previous) => ({ ...previous, [field]: value }));
-  const notify = (title, message, variant = "success") => setToast({ show: true, title, message, variant });
+  const notify = (title, message, variant = "warning") => setToast({ show: true, title, message, variant });
 
+  // Validación campo por campo con Toasts descriptivos específicos
   const validateStep = (step) => {
     if (step === 1) {
-      if (!data.userKind || !data.ages.trim() || !data.planType) {
-        notify("Faltan datos por completar", "Selecciona para quién es el seguro, ingresa las edades y elige una modalidad.", "warning");
+      if (!data.userKind) {
+        notify("Campo requerido", "Selecciona para quién deseas el seguro.", "warning");
+        return false;
+      }
+      if (!data.ages.trim()) {
+        notify("Edades faltantes", "Ingresa las edades de las personas a asegurar.", "warning");
         return false;
       }
       if (!/^\s*\d{1,3}(\s*,\s*\d{1,3})*\s*$/.test(data.ages)) {
-        notify("Formato de edades incorrecto", "Escribe las edades como números separados por comas. Ejemplo: 35, 32, 8.", "warning");
+        notify("Formato incorrecto", "Escribe las edades separadas por comas (Ej: 35, 32, 8).", "danger");
+        return false;
+      }
+      if (!data.planType) {
+        notify("Modalidad faltante", "Selecciona un tipo de plan para continuar.", "warning");
         return false;
       }
     }
-    if (step === 2 && (!data.category || !data.profile)) {
-      notify("Selección incompleta", "Elige una categoría de protección y tu estilo de decisión preferido.", "warning");
-      return false;
+
+    if (step === 2) {
+      if (!data.category) {
+        notify("Categoría requerida", "Selecciona el área que deseas proteger.", "warning");
+        return false;
+      }
+      if (!data.profile) {
+        notify("Estilo requerido", "Indica tu estilo preferido para tomar la decisión.", "warning");
+        return false;
+      }
+    }
+
+    if (step === 3) {
+      // Validaciones si intenta cotizar por correo
+      if (!data.name.trim()) {
+        notify("Nombre requerido", "Ingresa tu nombre completo en la sección de descarga.", "warning");
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        notify("Correo inválido", "Escribe un correo electrónico válido.", "danger");
+        return false;
+      }
+      if (!data.phone.trim()) {
+        notify("Teléfono requerido", "Ingresa un número de teléfono de contacto.", "warning");
+        return false;
+      }
+      if (!data.consent) {
+        notify("Autorización requerida", "Debes autorizar el tratamiento de tus datos para continuar.", "warning");
+        return false;
+      }
     }
 
     if (step === 4) {
-      if (!data.name.trim() || !data.document.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) || !data.phone.trim()) {
-        notify("Verifica tus datos", "Completa tu nombre, documento, correo válido y número de celular.", "warning");
+      if (!data.name.trim()) {
+        notify("Nombre faltante", "Ingresa el nombre completo del tomador.", "warning");
         return false;
       }
-      if (!data.healthDeclaration || !data.privacyConsent || !/^\d{6}$/.test(data.otp)) {
-        notify("Validación pendiente", "Acepta las declaraciones de salud y privacidad, e ingresa tu código OTP de 6 dígitos.", "warning");
+      if (!data.document.trim()) {
+        notify("Documento faltante", "Ingresa tu tipo y número de documento de identidad.", "warning");
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        notify("Correo inválido", "Verifica el formato de tu correo electrónico.", "danger");
+        return false;
+      }
+      if (!data.phone.trim()) {
+        notify("Celular faltante", "Ingresa tu número de celular móvil.", "warning");
+        return false;
+      }
+      if (!data.healthDeclaration) {
+        notify("Declaración obligatoria", "Debes confirmar la respuesta de la declaración de salud.", "warning");
+        return false;
+      }
+      if (!data.privacyConsent) {
+        notify("Aviso de privacidad", "Debes aceptar el aviso de privacidad y términos.", "warning");
+        return false;
+      }
+      if (!/^\d{6}$/.test(data.otp)) {
+        notify("Código OTP inválido", "Ingresa el código de verificación de 6 dígitos (Ej: 123456).", "danger");
         return false;
       }
     }
-    if (step === 5 && (!data.payerName.trim() || !data.paymentMethod || !data.email.trim() || !data.billingAddress.trim())) {
-      notify("Datos de pago incompletos", "Indica el titular, la pasarela, el correo de facturación y tu dirección.", "warning");
-      return false;
+
+    if (step === 5) {
+      if (!data.payerName.trim()) {
+        notify("Titular requerido", "Ingresa el nombre del titular del medio de pago.", "warning");
+        return false;
+      }
+      if (!data.paymentMethod) {
+        notify("Método de pago", "Selecciona una pasarela o método de pago.", "warning");
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        notify("Correo de factura", "Ingresa un correo electrónico válido para el comprobante.", "danger");
+        return false;
+      }
+      if (!data.billingAddress.trim()) {
+        notify("Dirección requerida", "Ingresa tu dirección de correspondencia o facturación.", "warning");
+        return false;
+      }
     }
     return true;
   };
@@ -652,7 +725,6 @@ export default function App() {
     }
     if (currentStep < 6) {
       setCurrentStep((step) => step + 1);
-      notify(`Paso ${currentStep + 1}`, STEPS[currentStep]?.subtitle || "Continúa con el proceso.");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
@@ -666,15 +738,27 @@ export default function App() {
   };
 
   const requestQuote = () => {
-    if (!data.name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) || !data.consent) {
-      notify("No se pudo enviar", "Verifica tu nombre, correo válido y la autorización de datos.", "warning");
+    if (!data.name.trim()) {
+      notify("Nombre requerido", "Ingresa tu nombre para enviar la cotización.", "warning");
       return;
     }
-    notify("¡Cotización enviada!", "Revisa tu bandeja de entrada en los próximos minutos.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      notify("Correo inválido", "Ingresa un correo electrónico válido.", "danger");
+      return;
+    }
+    if (!data.phone.trim()) {
+      notify("Teléfono requerido", "Ingresa tu número telefónico.", "warning");
+      return;
+    }
+    if (!data.consent) {
+      notify("Consentimiento requerido", "Autoriza el tratamiento de datos para continuar.", "warning");
+      return;
+    }
+    notify("¡Cotización enviada!", "Revisa tu bandeja de entrada en los próximos minutos.", "success");
   };
 
   const finish = () => {
-    notify("¡Proceso completado!", "Gracias por confiar en Aurora Seguros.");
+    notify("¡Proceso completado!", "Gracias por confiar en Aurora Seguros.", "success");
   };
 
   return (
@@ -733,10 +817,23 @@ export default function App() {
         </div>
       </header>
 
-      {/* Región dinámica de mensajes de alerta en vivo para lectores de pantalla */}
-      <div className="visually-hidden" aria-live="assertive" aria-atomic="true">
-        {toast.show && `${toast.title}: ${toast.message}`}
-      </div>
+      {/* CONTENEDOR DE TOASTS FLOTANTES EN VIVO */}
+      <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1080 }}>
+        <Toast 
+          onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+          show={toast.show} 
+          delay={4000} 
+          autohide
+          bg={toast.variant}
+        >
+          <Toast.Header closeButton>
+            <strong className="me-auto">{toast.title}</strong>
+          </Toast.Header>
+          <Toast.Body className={toast.variant === "light" || toast.variant === "warning" ? "text-dark" : "text-white"}>
+            {toast.message}
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
 
       {!started ? (
         <WelcomeScreen onStart={() => setStarted(true)} />
@@ -785,8 +882,9 @@ export default function App() {
                     updateData={updateData}
                     onRequestQuote={requestQuote}
                     onPurchase={() => {
+                      if (!validateStep(3)) return;
                       setCurrentStep(4);
-                      notify("Continuemos con la contratación", "Tus respuestas se conservan. Completa los datos requeridos.");
+                      notify("Continuemos", "Tus respuestas se conservan. Completa los datos requeridos.", "info");
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                   />
@@ -847,7 +945,7 @@ export default function App() {
           <Tabs defaultActiveKey="glosario" id="info-modal-tabs" className="mb-4 custom-green-tabs">
             
             {/* PESTAÑA 1: GLOSARIO */}
-            <Tab eventKey="glosario" title=" Glosario">
+            <Tab eventKey="glosario" title="📖 Glosario">
               <p className="text-muted small mb-3">Términos esenciales para comprender tu póliza sin enredos:</p>
               <dl className="row g-3 small">
                 <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Tomador</dt>
@@ -868,7 +966,7 @@ export default function App() {
             </Tab>
 
             {/* PESTAÑA 2: PREGUNTAS FRECUENTES (FAQs) */}
-            <Tab eventKey="faq" title="Preguntas Frecuentes">
+            <Tab eventKey="faq" title="❓ Preguntas Frecuentes">
               <div className="accordion accordion-flush" id="faqAccordion">
                 <div className="mb-3">
                   <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Puedo corregir mis datos si ya avancé de paso?</h6>
@@ -894,7 +992,7 @@ export default function App() {
             </Tab>
 
             {/* PESTAÑA 3: TESTIMONIOS */}
-            <Tab eventKey="testimonios" title="Testimonios">
+            <Tab eventKey="testimonios" title="⭐ Testimonios">
               <p className="text-muted small mb-3">
                 Descubre por qué nuestros clientes confían en la protección de Aurora Seguros:
               </p>

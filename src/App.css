@@ -18,7 +18,29 @@ body {
   color: var(--aurora-text);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
-button, input, select, textarea { font: inherit; }
+
+
+
+/* ===================================================
+   CONTENEDOR Y ESTILOS PARA LOS TOASTS DE ALERTA
+   =================================================== */
+.toast-container {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  z-index: 1090 !important; /* Por encima de cualquier tarjeta o modal */
+  pointer-events: none; /* Permite hacer clic a través del contenedor vacío */
+}
+
+/* Asegura que la tarjeta del Toast sí reciba clics y se vea nítida */
+.toast-container .toast {
+  pointer-events: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  opacity: 1 !important;
+}
+
+input, select, textarea { font: inherit; }
 :focus-visible {
   outline: 3px solid var(--aurora-focus) !important;
   outline-offset: 3px !important;
