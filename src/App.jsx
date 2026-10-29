@@ -945,7 +945,7 @@ export default function App() {
           <Tabs defaultActiveKey="glosario" id="info-modal-tabs" className="mb-4 custom-green-tabs">
             
             {/* PESTAÑA 1: GLOSARIO */}
-            <Tab eventKey="glosario" title="📖 Glosario">
+            <Tab eventKey="glosario" title=" Glosario">
               <p className="text-muted small mb-3">Términos esenciales para comprender tu póliza sin enredos:</p>
               <dl className="row g-3 small">
                 <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Tomador</dt>
@@ -966,7 +966,7 @@ export default function App() {
             </Tab>
 
             {/* PESTAÑA 2: PREGUNTAS FRECUENTES (FAQs) */}
-            <Tab eventKey="faq" title="❓ Preguntas Frecuentes">
+            <Tab eventKey="faq" title=" Preguntas Frecuentes">
               <div className="accordion accordion-flush" id="faqAccordion">
                 <div className="mb-3">
                   <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Puedo corregir mis datos si ya avancé de paso?</h6>
@@ -992,7 +992,7 @@ export default function App() {
             </Tab>
 
             {/* PESTAÑA 3: TESTIMONIOS */}
-            <Tab eventKey="testimonios" title="⭐ Testimonios">
+            <Tab eventKey="testimonios" title=" Testimonios">
               <p className="text-muted small mb-3">
                 Descubre por qué nuestros clientes confían en la protección de Aurora Seguros:
               </p>
