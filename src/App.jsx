@@ -471,67 +471,70 @@ function WelcomeScreen({ onStart }) {
       className="welcome-screen  min-vh-100 " 
       aria-labelledby="welcome-title"
     >
+      {/* Contenido principal perfectamente centrado y con tipografía de alta gama */}
       <div 
-        className="welcome-content d-flex flex-column align-items-center justify-content-center py-5 px-3 w-100 mx-auto text-center" 
-        style={{ maxWidth: "750px" }}
+        className="welcome-content d-flex flex-column align-items-center justify-content-center py-5 px-4 w-100 mx-auto text-center position-relative z-1" 
+        style={{ maxWidth: "700px" }}
       >
-        {/* Subtítulo superior centrado */}
-        <div className="w-100 text-center mb-2">
-          <span className="welcome-eyebrow text-uppercase fw-bold tracking-wider ">
+        {/* Identidad de marca superior con acento estético */}
+        <div className="d-flex align-items-center gap-2 mb-4">
+          <span style={{ width: "24px", height: "1px", backgroundColor: "rgba(255, 255, 255, 0.6)" }} aria-hidden="true"></span>
+          <span className="text-uppercase fw-semibold tracking-widest text-light small" style={{ letterSpacing: "3px", fontSize: "0.8rem", opacity: 0.95 }}>
             AURORA SEGUROS
           </span>
+          <span style={{ width: "24px", height: "1px", backgroundColor: "rgba(255, 255, 255, 0.6)" }} aria-hidden="true"></span>
         </div>
 
-        {/* Título Principal centrado */}
-        <div className="w-100 text-center mb-4">
-          <h1 id="welcome-title" className="display-4 fw-bold text-white text-center m-0">
-            Tu tranquilidad comienza aquí
-          </h1>
-        </div>
+        {/* Título principal con presencia sofisticada */}
+        <h1 
+          id="welcome-title" 
+          className="display-4 fw-bold text-white text-center mb-4" 
+          style={{ letterSpacing: "-1px", lineHeight: "1.15", textShadow: "0 4px 20px rgba(0,0,0,0.4)" }}
+        >
+          Tu tranquilidad comienza aquí
+        </h1>
 
-        {/* Recuadro de instrucción centrado con ancho controlado */}
-        <div className="w-100 d-flex justify-content-center mb-4">
-          <div 
-            className="instruction-box p-3 p-md-4 rounded-4 shadow-lg border text-center"
-            style={{ 
-              backgroundColor: "rgba(15, 23, 42, 0.75)", 
-              borderColor: "rgba(255, 255, 255, 0.2)",
-              backdropFilter: "blur(8px)",
-              maxWidth: "600px",
-              width: "100%"
-            }}
+        {/* Instrucción redactada con claridad editorial */}
+        <div className="mb-5" style={{ maxWidth: "540px" }}>
+          <p 
+            className="welcome-description text-white fs-5 mb-0 fw-light text-center lh-base" 
+            style={{ textShadow: "0 2px 8px rgba(0,0,0,0.4)", opacity: 0.92 }}
           >
-            <p className="welcome-description text-white fs-5 mb-0 fw-medium text-center">
-          <strong className="text-warning">Instrucción:</strong> Explora tus opciones y cotiza a tu ritmo. Puedes avanzar o regresar en cualquier momento sin perder los datos ingresados.
-            </p>
-          </div>
+            Explora tus opciones y cotiza a tu propio ritmo. Puedes avanzar o regresar en cualquier momento sin perder los datos ingresados.
+          </p>
         </div>
 
-        {/* Botón y nota al pie perfectamente centrados */}
-        <div className="w-100 d-flex flex-column align-items-center justify-content-center text-center">
-     <Button
+        {/* Botón principal estilizado y discreta nota al pie */}
+        <div className="d-flex flex-column align-items-center justify-content-center text-center w-100">
+          <Button
             type="button"
-            className="welcome-button px-5 py-3 fw-bold shadow mb-3 btn btn-success btn-lg"
+            className="welcome-button px-5 py-3 fw-medium shadow-lg btn btn-success btn-lg rounded-pill mb-4"
             onClick={onStart}
             style={{ 
-              backgroundColor: "rgb(0, 135, 90)", 
-              borderColor: "rgb(0, 135, 90)",
-              transition: "all 0.2s ease-in-out" 
+              backgroundColor: "#00875A", 
+              borderColor: "#00875A",
+              transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+              fontSize: "1.05rem",
+              letterSpacing: "0.5px"
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "rgb(0, 110, 73)"; // Un verde un poco más oscuro para el hover
-              e.currentTarget.style.borderColor = "rgb(0, 110, 73)";
+              e.currentTarget.style.backgroundColor = "#006E45";
+              e.currentTarget.style.borderColor = "#006E45";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 8px 25px rgba(0, 135, 90, 0.35)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "rgb(0, 135, 90)"; // Vuelve al color original al salir el mouse
-              e.currentTarget.style.borderColor = "rgb(0, 135, 90)";
+              e.currentTarget.style.backgroundColor = "#00875A";
+              e.currentTarget.style.borderColor = "#00875A";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "";
             }}
           >
             Iniciar cotización 
           </Button>
           
-          <p className="welcome-note small m-0 text-center">
-          Proceso 100% confidencial. Te tomará solo unos minutos.
+          <p className="welcome-note small text-white-50 m-0 text-center" style={{ opacity: 0.75, letterSpacing: "0.2px" }}>
+            Proceso 100% confidencial · Te tomará solo unos minutos
           </p>
         </div>
       </div>
@@ -676,7 +679,9 @@ export default function App() {
         <section className="wizard-wrap" aria-labelledby="page-title">
           <div className="page-heading mb-3">
             <p className="eyebrow text-uppercase  small fw-bold mb-1 text-white">COTIZA A TU RITMO</p>
-            <h1 id="page-title" className="h3">Encuentra el seguro adecuado para ti</h1>
+       <h1 id="page-title" className="h3">
+  Encuentra  <span className="text-green"> el seguro adecuado para ti</span>
+</h1>
             <p className=" text-white">Avanza paso a paso, compara tus opciones y vuelve atrás cuando necesites ajustar tus respuestas.</p>
           </div>
 
@@ -691,7 +696,7 @@ export default function App() {
 
               <div className="step-heading d-flex justify-content-between align-items-center mb-3">
                 <div>
-                  <p className="eyebrow text-uppercase text-primary small fw-bold mb-0">PASO {currentStep}</p>
+                  <p className="eyebrow text-uppercase text-success medium fw-bold mb-0">PASO {currentStep}</p>
                   <h2 className="h4 mb-0">{STEPS[currentStep - 1].title}: {STEPS[currentStep - 1].subtitle}</h2>
                 </div>
                 <Badge bg="light" text="dark" className="border">
@@ -741,9 +746,7 @@ export default function App() {
                   </div>
                 </div>
               </Form>
-              <p className="privacy-note small text-muted text-center mt-3 mb-0">
-                <span aria-hidden="true">🔒</span> Prototipo de experiencia. No introduzcas datos personales reales.
-              </p>
+         
             </Card.Body>
           </Card>
         </section>

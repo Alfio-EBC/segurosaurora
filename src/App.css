@@ -225,22 +225,21 @@ form {
 
 
 .welcome-screen {
-grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: 1.2fr 0.8fr;
     gap: 48px;
     display: inline-flex;
     max-width: 1120px;
     margin: 48px auto;
     padding: 56px;
     background: #120f0966;
-    border: 1px solid #929292;
     border-radius: 20px;
     box-shadow: 0 12px 40px rgba(30, 40, 75, 0.08);
     margin: auto;
-    text-align: center;
     justify-content: center;
     grid-auto-flow: row;
     align-content: space-between;
     align-items: center;
+    background-color: #000713a6;
 }
 
 
@@ -276,7 +275,7 @@ grid-template-columns: 1.2fr 0.8fr;
   margin: 28px 0;
   color: #1e284b;
 }
-
+span.text-green {  color: var(--bs-teal);}
 .welcome-benefits div {
   display: flex;
   align-items: center;
