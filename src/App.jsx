@@ -647,7 +647,6 @@ export default function App() {
     }
 
     if (step === 3) {
-      // Validaciones si intenta cotizar por correo
       if (!data.name.trim()) {
         notify("Nombre requerido", "Ingresa tu nombre completo en la sección de descarga.", "warning");
         return false;
@@ -761,9 +760,11 @@ export default function App() {
     notify("¡Proceso completado!", "Gracias por confiar en Aurora Seguros.", "success");
   };
 
-  return (
-    <main className="app-shell">
-      <header className="site-header d-flex justify-content-between align-items-center mb-4" role="banner">
+return (
+    <div className="app-shell d-flex flex-column min-vh-100">
+      
+      {/* HEADER AL 100% DE ANCHO */}
+      <header className="site-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-white w-100 shadow-sm" role="banner">
         {/* Logotipo de la marca */}
         <button className="brand-lockup border-0 bg-transparent p-0" type="button" onClick={() => setStarted(false)} aria-label="Volver al inicio de Aurora Seguros">
           <img
@@ -817,241 +818,285 @@ export default function App() {
         </div>
       </header>
 
-      {/* CONTENEDOR DE TOASTS FLOTANTES EN VIVO */}
-      <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1080 }}>
-        <Toast 
-          onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
-          show={toast.show} 
-          delay={4000} 
-          autohide
-          bg={toast.variant}
-        >
-          <Toast.Header closeButton>
-            <strong className="me-auto">{toast.title}</strong>
-          </Toast.Header>
-          <Toast.Body className={toast.variant === "light" || toast.variant === "warning" ? "text-dark" : "text-white"}>
-            {toast.message}
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
+      {/* CONTENEDOR PRINCIPAL */}
+      <main className="flex-grow-1 container py-4">
+        {/* CONTENEDOR DE TOASTS FLOTANTES EN VIVO */}
+        <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1080 }}>
+          <Toast 
+            onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+            show={toast.show} 
+            delay={4000} 
+            autohide
+            bg={toast.variant}
+          >
+            <Toast.Header closeButton>
+              <strong className="me-auto">{toast.title}</strong>
+            </Toast.Header>
+            <Toast.Body className={toast.variant === "light" || toast.variant === "warning" ? "text-dark" : "text-white"}>
+              {toast.message}
+            </Toast.Body>
+          </Toast>
+        </ToastContainer>
 
-      {!started ? (
-        <WelcomeScreen onStart={() => setStarted(true)} />
-      ) : (
-        <section className="wizard-wrap" aria-labelledby="page-title">
-          <div className="page-heading mb-3">
-            <p className="eyebrow text-uppercase small fw-bold mb-1 text-white">COTIZA A TU RITMO</p>
-            <h1 id="page-title" className="h3">
-              Encuentra <span className="text-green">el seguro perfecto para ti</span>
-            </h1>
-            <p className="text-white">Avanza paso a paso, compara alternativas y ajusta tus respuestas cuando lo necesites.</p>
-          </div>
+        {!started ? (
+          <WelcomeScreen onStart={() => setStarted(true)} />
+        ) : (
+          <section className="wizard-wrap" aria-labelledby="page-title">
+            <div className="page-heading mb-3">
+              <p className="eyebrow text-uppercase small fw-bold mb-1 text-white">COTIZA A TU RITMO</p>
+              <h1 id="page-title" className="h3">
+                Encuentra <span className="text-green">el seguro perfecto para ti</span>
+              </h1>
+              <p className="text-white">Avanza paso a paso, compara alternativas y ajusta tus respuestas cuando lo necesites.</p>
+            </div>
 
-          <Card className="wizard-card shadow-sm">
-            <Card.Body>
-              {/* Metadatos de progreso con porcentaje destacado */}
-              <div className="progress-meta d-flex justify-content-between align-items-center mb-2" aria-hidden="true">
-                <span className="text-muted fw-semibold">Paso {currentStep} de 6</span>
-                <span className="badge bg-success bg-opacity-10 text-success px-2 py-1 fw-bold fs-6">
-                  {Math.round((currentStep / 6) * 100)}% completado
-                </span>
-              </div>
-              <ProgressBar 
-                now={(currentStep / 6) * 100} 
-                aria-label={`Progreso del formulario: Paso ${currentStep} de 6, ${Math.round((currentStep / 6) * 100)}% completado`} 
-                className="wizard-progress mb-4" 
-              />
-              <StepIndicator currentStep={currentStep} onStepClick={(step) => setCurrentStep(step)} />
-
-              <div className="step-heading d-flex justify-content-between align-items-center mb-3">
-                <div>
-                  <p className="eyebrow text-uppercase text-success medium fw-bold mb-0">PASO {currentStep}</p>
-                  <h2 className="h4 mb-0">{STEPS[currentStep - 1].title}: {STEPS[currentStep - 1].subtitle}</h2>
+            <Card className="wizard-card shadow-sm">
+              <Card.Body>
+                {/* Metadatos de progreso con porcentaje destacado */}
+                <div className="progress-meta d-flex justify-content-between align-items-center mb-2" aria-hidden="true">
+                  <span className="text-muted fw-semibold">Paso {currentStep} de 6</span>
+                  <span className="badge bg-success bg-opacity-10 text-success px-2 py-1 fw-bold fs-6">
+                    {Math.round((currentStep / 6) * 100)}% completado
+                  </span>
                 </div>
-                <Badge bg="light" text="dark" className="border">
-                  {currentStep === 6 ? "Último paso" : `${6 - currentStep} pasos restantes`}
-                </Badge>
-              </div>
+                <ProgressBar 
+                  now={(currentStep / 6) * 100} 
+                  aria-label={`Progreso del formulario: Paso ${currentStep} de 6, ${Math.round((currentStep / 6) * 100)}% completado`} 
+                  className="wizard-progress mb-4" 
+                />
+                <StepIndicator currentStep={currentStep} onStepClick={(step) => setCurrentStep(step)} />
 
-              <Form onSubmit={(event) => { event.preventDefault(); next(); }} noValidate aria-label={`Formulario del paso ${currentStep}`}>
-                {currentStep === 1 && <StepOne data={data} updateData={updateData} />}
-                {currentStep === 2 && <StepTwo data={data} updateData={updateData} />}
-                {currentStep === 3 && (
-                  <StepThree
-                    data={data}
-                    updateData={updateData}
-                    onRequestQuote={requestQuote}
-                    onPurchase={() => {
-                      if (!validateStep(3)) return;
-                      setCurrentStep(4);
-                      notify("Continuemos", "Tus respuestas se conservan. Completa los datos requeridos.", "info");
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                  />
-                )}
-                {currentStep === 4 && <StepFour data={data} updateData={updateData} />}
-                {currentStep === 5 && <StepFive data={data} updateData={updateData} />}
-                {currentStep === 6 && <StepSix data={data} updateData={updateData} />}
+                <div className="step-heading d-flex justify-content-between align-items-center mb-3">
+                  <div>
+                    <p className="eyebrow text-uppercase text-success medium fw-bold mb-0">PASO {currentStep}</p>
+                    <h2 className="h4 mb-0">{STEPS[currentStep - 1].title}: {STEPS[currentStep - 1].subtitle}</h2>
+                  </div>
+                  <Badge bg="light" text="dark" className="border">
+                    {currentStep === 6 ? "Último paso" : `${6 - currentStep} pasos restantes`}
+                  </Badge>
+                </div>
 
-                <div className="wizard-actions d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                  <ActionTooltip text="Vuelve al paso anterior sin perder ningún dato ingresado.">
-                    <Button 
-                      variant="outline-secondary" 
-                      onClick={goBack} 
-                      disabled={currentStep === 1} 
-                      type="button"
-                      aria-label="Regresar al paso anterior"
-                    >
-                      ← Anterior
-                    </Button>
-                  </ActionTooltip>
-                  <div className="action-right">
-                    {currentStep < 6 ? (
-                      <ActionTooltip text="Valida la información y avanza al siguiente paso.">
-                        <Button variant="primary" type="submit" aria-label="Avanzar al siguiente paso">
-                          Siguiente →
-                        </Button>
-                      </ActionTooltip>
-                    ) : (
-                      <ActionTooltip text="Finaliza y envía tu solicitud de póliza.">
-                        <Button variant="success" type="button" onClick={finish} aria-label="Finalizar cotización">
-                          Finalizar solicitud ✓
-                        </Button>
-                      </ActionTooltip>
-                    )}
+                <Form onSubmit={(event) => { event.preventDefault(); next(); }} noValidate aria-label={`Formulario del paso ${currentStep}`}>
+                  {currentStep === 1 && <StepOne data={data} updateData={updateData} />}
+                  {currentStep === 2 && <StepTwo data={data} updateData={updateData} />}
+                  {currentStep === 3 && (
+                    <StepThree
+                      data={data}
+                      updateData={updateData}
+                      onRequestQuote={requestQuote}
+                      onPurchase={() => {
+                        if (!validateStep(3)) return;
+                        setCurrentStep(4);
+                        notify("Continuemos", "Tus respuestas se conservan. Completa los datos requeridos.", "info");
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    />
+                  )}
+                  {currentStep === 4 && <StepFour data={data} updateData={updateData} />}
+                  {currentStep === 5 && <StepFive data={data} updateData={updateData} />}
+                  {currentStep === 6 && <StepSix data={data} updateData={updateData} />}
+
+                  <div className="wizard-actions d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                    <ActionTooltip text="Vuelve al paso anterior sin perder ningún dato ingresado.">
+                      <Button 
+                        variant="outline-secondary" 
+                        onClick={goBack} 
+                        disabled={currentStep === 1} 
+                        type="button"
+                        aria-label="Regresar al paso anterior"
+                      >
+                        ← Anterior
+                      </Button>
+                    </ActionTooltip>
+                    <div className="action-right">
+                      {currentStep < 6 ? (
+                        <ActionTooltip text="Valida la información y avanza al siguiente paso.">
+                          <Button variant="primary" type="submit" aria-label="Avanzar al siguiente paso">
+                            Siguiente →
+                          </Button>
+                        </ActionTooltip>
+                      ) : (
+                        <ActionTooltip text="Finaliza y envía tu solicitud de póliza.">
+                          <Button variant="success" type="button" onClick={finish} aria-label="Finalizar cotización">
+                            Finalizar solicitud ✓
+                          </Button>
+                        </ActionTooltip>
+                      )}
+                    </div>
+                  </div>
+                </Form>
+              </Card.Body>
+            </Card>
+          </section>
+        )}
+
+        {/* MODAL MULTIPESTAÑA: GLOSARIO, PREGUNTAS FRECUENTES Y TESTIMONIOS */}
+        <Modal 
+          show={showInfoModal} 
+          onHide={() => setShowInfoModal(false)} 
+          centered 
+          size="lg"
+          scrollable
+          aria-labelledby="info-modal-title"
+        >
+          <Modal.Header closeButton className="border-bottom">
+            <Modal.Title id="info-modal-title" className="h5 fw-bold" style={{ color: "#00875A" }}>
+              Centro de Ayuda Aurora Seguros
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="p-4">
+            <Tabs defaultActiveKey="glosario" id="info-modal-tabs" className="mb-4 custom-green-tabs">
+              
+              {/* PESTAÑA 1: GLOSARIO */}
+              <Tab eventKey="glosario" title="📖 Glosario">
+                <p className="text-muted small mb-3">Términos esenciales para comprender tu póliza sin enredos:</p>
+                <dl className="row g-3 small">
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Tomador</dt>
+                  <dd className="col-sm-8 mb-2">Persona natural o jurídica que contrata formalmente el seguro y sus condiciones.</dd>
+
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Asegurado</dt>
+                  <dd className="col-sm-8 mb-2">Persona o personas protegidas directamente bajo los beneficios de la póliza.</dd>
+
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Prima</dt>
+                  <dd className="col-sm-8 mb-2">Valor económico de la protección que se paga para mantener activa la cobertura.</dd>
+
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Código OTP</dt>
+                  <dd className="col-sm-8 mb-2">Clave numérica temporal de seguridad enviada para certificar tu identidad.</dd>
+
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Declaración de Salud</dt>
+                  <dd className="col-sm-8 mb-0">Cuestionario donde se registra el estado médico general de los futuros asegurados.</dd>
+                </dl>
+              </Tab>
+
+              {/* PESTAÑA 2: PREGUNTAS FRECUENTES (FAQs) */}
+              <Tab eventKey="faq" title="❓ Preguntas Frecuentes">
+                <div className="accordion accordion-flush" id="faqAccordion">
+                  <div className="mb-3">
+                    <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Puedo corregir mis datos si ya avancé de paso?</h6>
+                    <p className="small text-muted mb-0">
+                      Sí, usa el botón "Anterior" o haz clic directamente sobre los pasos anteriores en la barra superior. Tu información se conservará intacta.
+                    </p>
+                  </div>
+                  <hr />
+                  <div className="mb-3">
+                    <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Mis datos personales se encuentran protegidos?</h6>
+                    <p className="small text-muted mb-0">
+                      Absolutamente. Cumplimos rigurosamente con normativas de confidencialidad y utilizamos validación de identidad mediante códigos OTP seguros.
+                    </p>
+                  </div>
+                  <hr />
+                  <div className="mb-0">
+                    <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Se efectuarán cobros reales en esta simulación?</h6>
+                    <p className="small text-muted mb-0">
+                      No. Este es un entorno de pruebas interactivo diseñado exclusivamente para que evalúes la experiencia de cotización sin cargos reales.
+                    </p>
                   </div>
                 </div>
-              </Form>
-            </Card.Body>
-          </Card>
-        </section>
-      )}
+              </Tab>
 
-      {/* MODAL MULTIPESTAÑA: GLOSARIO, PREGUNTAS FRECUENTES Y TESTIMONIOS */}
-      <Modal 
-        show={showInfoModal} 
-        onHide={() => setShowInfoModal(false)} 
-        centered 
-        size="lg"
-        scrollable
-        aria-labelledby="info-modal-title"
-      >
-        <Modal.Header closeButton className="border-bottom">
-          <Modal.Title id="info-modal-title" className="h5 fw-bold" style={{ color: "#00875A" }}>
-            Centro de Ayuda Aurora Seguros
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="p-4">
-          <Tabs defaultActiveKey="glosario" id="info-modal-tabs" className="mb-4 custom-green-tabs">
-            
-            {/* PESTAÑA 1: GLOSARIO */}
-            <Tab eventKey="glosario" title=" Glosario">
-              <p className="text-muted small mb-3">Términos esenciales para comprender tu póliza sin enredos:</p>
-              <dl className="row g-3 small">
-                <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Tomador</dt>
-                <dd className="col-sm-8 mb-2">Persona natural o jurídica que contrata formalmente el seguro y sus condiciones.</dd>
+              {/* PESTAÑA 3: TESTIMONIOS */}
+              <Tab eventKey="testimonios" title="⭐ Testimonios">
+                <p className="text-muted small mb-3">
+                  Descubre por qué nuestros clientes confían en la protección de Aurora Seguros:
+                </p>
+                <Row className="g-3">
+                  <Col md={6}>
+                    <Card className="h-100 border p-3 rounded-3 shadow-sm" style={{ backgroundColor: "#F4FBF7", borderColor: "#D0EBDD" }}>
+                      <Card.Body className="p-0 d-flex flex-column justify-content-between">
+                        <div>
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <span className="fs-5" style={{ color: "#00875A" }}>“</span>
+                            <span className="fw-bold" style={{ color: "#00875A" }}>★ ★ ★ ★ ★</span>
+                          </div>
+                          <p className="small fst-italic text-dark mb-3">
+                            "Coticé el seguro para toda mi familia en pocos minutos. El proceso guiado es sumamente claro y transparente."
+                          </p>
+                        </div>
+                        <div className="border-top pt-2" style={{ borderColor: "#D0EBDD" }}>
+                          <strong className="d-block small" style={{ color: "#00875A" }}>Carolina R.</strong>
+                          <small className="text-muted">Plan Familiar</small>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
 
-                <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Asegurado</dt>
-                <dd className="col-sm-8 mb-2">Persona o personas protegidas directamente bajo los beneficios de la póliza.</dd>
+                  <Col md={6}>
+                    <Card className="h-100 border p-3 rounded-3 shadow-sm" style={{ backgroundColor: "#F4FBF7", borderColor: "#D0EBDD" }}>
+                      <Card.Body className="p-0 d-flex flex-column justify-content-between">
+                        <div>
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <span className="fs-5" style={{ color: "#00875A" }}>“</span>
+                            <span className="fw-bold" style={{ color: "#00875A" }}>★ ★ ★ ★ ★</span>
+                          </div>
+                          <p className="small fst-italic text-dark mb-3">
+                            "La atención digital y la opción de descargar la cotización en PDF facilitó la toma de decisiones en nuestra empresa."
+                          </p>
+                        </div>
+                        <div className="border-top pt-2" style={{ borderColor: "#D0EBDD" }}>
+                          <strong className="d-block small" style={{ color: "#00875A" }}>Mateo V.</strong>
+                          <small className="text-muted">Seguro Corporativo</small>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+              </Tab>
 
-                <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Prima</dt>
-                <dd className="col-sm-8 mb-2">Valor económico de la protección que se paga para mantener activa la cobertura.</dd>
+            </Tabs>
+          </Modal.Body>
+          <Modal.Footer className="border-top">
+            <Button 
+              variant="success" 
+              size="sm" 
+              onClick={() => setShowInfoModal(false)}
+              style={{ backgroundColor: "#00875A", borderColor: "#00875A" }}
+            >
+              Entendido
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </main>
 
-                <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Código OTP</dt>
-                <dd className="col-sm-8 mb-2">Clave numérica temporal de seguridad enviada para certificar tu identidad.</dd>
-
-                <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Declaración de Salud</dt>
-                <dd className="col-sm-8 mb-0">Cuestionario donde se registra el estado médico general de los futuros asegurados.</dd>
-              </dl>
-            </Tab>
-
-            {/* PESTAÑA 2: PREGUNTAS FRECUENTES (FAQs) */}
-            <Tab eventKey="faq" title=" Preguntas Frecuentes">
-              <div className="accordion accordion-flush" id="faqAccordion">
-                <div className="mb-3">
-                  <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Puedo corregir mis datos si ya avancé de paso?</h6>
-                  <p className="small text-muted mb-0">
-                    Sí, usa el botón "Anterior" o haz clic directamente sobre los pasos anteriores en la barra superior. Tu información se conservará intacta.
-                  </p>
-                </div>
-                <hr />
-                <div className="mb-3">
-                  <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Mis datos personales se encuentran protegidos?</h6>
-                  <p className="small text-muted mb-0">
-                    Absolutamente. Cumplimos rigurosamente con normativas de confidencialidad y utilizamos validación de identidad mediante códigos OTP seguros.
-                  </p>
-                </div>
-                <hr />
-                <div className="mb-0">
-                  <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Se efectuarán cobros reales en esta simulación?</h6>
-                  <p className="small text-muted mb-0">
-                    No. Este es un entorno de pruebas interactivo diseñado exclusivamente para que evalúes la experiencia de cotización sin cargos reales.
-                  </p>
-                </div>
-              </div>
-            </Tab>
-
-            {/* PESTAÑA 3: TESTIMONIOS */}
-            <Tab eventKey="testimonios" title=" Testimonios">
-              <p className="text-muted small mb-3">
-                Descubre por qué nuestros clientes confían en la protección de Aurora Seguros:
+      {/* FOOTER CORPORATIVO CON TEXTO COMPLETAMENTE BLANCO */}
+    <footer className="text-white py-4 mt-auto w-100" style={{ backgroundColor: "#001016" }}>
+        <div className="container">
+          <Row className="gy-3 align-items-center">
+            <Col md={4} className="text-center text-md-start">
+              <span className="fw-bold text-uppercase tracking-wider text-white" style={{ fontSize: "0.95rem" }}>
+                Aurora Seguros S.A.
+              </span>
+              <p className="small text-white-50 mb-0 mt-1">
+                NIT: 900.842.119-5 · Vigilado Superintendencia Financiera de Colombia.
               </p>
-              <Row className="g-3">
-                <Col md={6}>
-                  <Card className="h-100 border p-3 rounded-3 shadow-sm" style={{ backgroundColor: "#F4FBF7", borderColor: "#D0EBDD" }}>
-                    <Card.Body className="p-0 d-flex flex-column justify-content-between">
-                      <div>
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                          <span className="fs-5" style={{ color: "#00875A" }}>“</span>
-                          <span className="fw-bold" style={{ color: "#00875A" }}>★ ★ ★ ★ ★</span>
-                        </div>
-                        <p className="small fst-italic text-dark mb-3">
-                          "Coticé el seguro para toda mi familia en pocos minutos. El proceso guiado es sumamente claro y transparente."
-                        </p>
-                      </div>
-                      <div className="border-top pt-2" style={{ borderColor: "#D0EBDD" }}>
-                        <strong className="d-block small" style={{ color: "#00875A" }}>Carolina R.</strong>
-                        <small className="text-muted">Plan Familiar</small>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
+            </Col>
+            <Col md={4} className="text-center small text-white-50">
+              <p className="mb-1">Línea de atención nacional: 01 8000 954321</p>
+              <p className="mb-0">Sede Principal: Cra. 7 # 72-41, Bogotá D.C.</p>
+            </Col>
+            <Col md={4} className="text-center text-md-end small">
+              <div className="d-flex justify-content-center justify-content-md-end gap-3 text-white-50">
+                <span className="text-white" style={{ cursor: "pointer" }} onClick={() => setShowInfoModal(true)}>Términos y Condiciones</span>
+                <span>·</span>
+                <span className="text-white" style={{ cursor: "pointer" }} onClick={() => setShowInfoModal(true)}>Política de Privacidad</span>
+              </div>
+              <p className="text-white-50 mb-0 mt-1" style={{ fontSize: "0.75rem" }}>
+                © 2026 Aurora Seguros. Todos los derechos reservados.
+              </p>
+            </Col>
+          </Row>
+        </div>
+      </footer>
+    </div>
 
-                <Col md={6}>
-                  <Card className="h-100 border p-3 rounded-3 shadow-sm" style={{ backgroundColor: "#F4FBF7", borderColor: "#D0EBDD" }}>
-                    <Card.Body className="p-0 d-flex flex-column justify-content-between">
-                      <div>
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                          <span className="fs-5" style={{ color: "#00875A" }}>“</span>
-                          <span className="fw-bold" style={{ color: "#00875A" }}>★ ★ ★ ★ ★</span>
-                        </div>
-                        <p className="small fst-italic text-dark mb-3">
-                          "La atención digital y la opción de descargar la cotización en PDF facilitó la toma de decisiones en nuestra empresa."
-                        </p>
-                      </div>
-                      <div className="border-top pt-2" style={{ borderColor: "#D0EBDD" }}>
-                        <strong className="d-block small" style={{ color: "#00875A" }}>Mateo V.</strong>
-                        <small className="text-muted">Seguro Corporativo</small>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row>
-            </Tab>
 
-          </Tabs>
-        </Modal.Body>
-        <Modal.Footer className="border-top">
-          <Button 
-            variant="success" 
-            size="sm" 
-            onClick={() => setShowInfoModal(false)}
-            style={{ backgroundColor: "#00875A", borderColor: "#00875A" }}
-          >
-            Entendido
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </main>
+
+
   );
+
+
+
+
+
+
+  
 }
