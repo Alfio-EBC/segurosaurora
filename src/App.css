@@ -147,6 +147,48 @@ button, input, select, textarea { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+
+
+
+
+
+
+/* Contenedor del tooltip CSS */
+.custom-tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.custom-tooltip-wrapper::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  z-index: 1070;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.custom-tooltip-wrapper:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+
+
 .logo-aurora {
   width: 240px;
   height: auto;
@@ -369,6 +411,25 @@ span.text-green {  color: var(--bs-teal);}
 .welcome-visual p {
   color: #5d6675;
 }
+a {
+  color: #00875A !important;
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+  color: #006E45 !important;
+  text-decoration: underline;
+}
+
+.text-primary {
+  color: #00875A !important;
+}
+.text-green {
+  color: #00875A !important;
+}
+.nav-link {
+    color: #66686a;
+}
 
 @media (max-width: 768px) {
   .welcome-screen {
@@ -385,4 +446,9 @@ span.text-green {  color: var(--bs-teal);}
   .welcome-button {
     width: 100%;
   }
+  form {
+ 
+    padding:0;
+
+}
 }
