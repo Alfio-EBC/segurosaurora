@@ -1081,7 +1081,7 @@ return (
               </Tab>
 
               {/* PESTAÑA 2: PREGUNTAS FRECUENTES (FAQs) */}
-              <Tab eventKey="faq" title="❓ Preguntas Frecuentes">
+              <Tab eventKey="faq" title="Preguntas Frecuentes">
                 <div className="accordion accordion-flush" id="faqAccordion">
                   <div className="mb-3">
                     <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Puedo corregir mis datos si ya avancé de paso?</h6>
@@ -1107,7 +1107,7 @@ return (
               </Tab>
 
               {/* PESTAÑA 3: TESTIMONIOS */}
-              <Tab eventKey="testimonios" title="⭐ Testimonios">
+              <Tab eventKey="testimonios" title="Testimonios">
                 <p className="text-muted small mb-3">
                   Descubre por qué nuestros clientes confían en la protección de Aurora Seguros:
                 </p>
