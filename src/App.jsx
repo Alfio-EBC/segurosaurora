@@ -160,7 +160,7 @@ function StepOne({ data, updateData }) {
 
         <Col md={12}>
           <Form.Group controlId="budget">
-            <Form.Label>Presupuesto orientativo (opcional)</Form.Label>
+            <Form.Label>¿Que tipo de Seguro buscas?</Form.Label>
             <Form.Select value={data.budget} onChange={(event) => updateData("budget", event.target.value)}>
               <option value="">Prefiero explorar todas las opciones</option>
               <option value="bajo">Económico / Básico</option>
