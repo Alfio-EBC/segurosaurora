@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useMemo, useState } from "react";
 import logoAurora from "./assets/logotipo-Aurora-Seguros.svg";
 import icono from "./assets/icono.svg";
+
 import {
   Alert,
   Badge,
@@ -121,25 +122,10 @@ function StepOne({ data, updateData }) {
       </p>
       <Row className="g-3">
         <Col md={6}>
-          <Form.Group controlId="userKind">
-            <Form.Label>¿Para quién deseas tu seguro? <span className="required" aria-hidden="true">*</span></Form.Label>
-            <Form.Select
-              value={data.userKind}
-              onChange={(event) => updateData("userKind", event.target.value)}
-              required
-              aria-required="true"
-              aria-describedby="userKindHelp"
-            >
-              <option value="">Elige una opción</option>
-              <option value="persona">Para mí o mi familia</option>
-              <option value="empresa">Para una empresa u organización</option>
-            </Form.Select>
-            <Form.Text id="userKindHelp">Esto nos ayuda a enfocar las opciones según tus necesidades.</Form.Text>
-          </Form.Group>
-        </Col>
-        <Col md={6}>
           <Form.Group controlId="ages">
-            <Form.Label>Edades de los asegurados <span className="required" aria-hidden="true">*</span></Form.Label>
+            <Form.Label>
+              Edades de los asegurados <span className="required" aria-hidden="true">*</span>
+            </Form.Label>
             <Form.Control
               value={data.ages}
               onChange={(event) => updateData("ages", event.target.value)}
@@ -151,9 +137,12 @@ function StepOne({ data, updateData }) {
             <Form.Text id="agesHelp">Escribe solo las edades separadas por comas (sin nombres).</Form.Text>
           </Form.Group>
         </Col>
+
         <Col md={6}>
           <Form.Group controlId="planType">
-            <Form.Label>Modalidad de plan <span className="required" aria-hidden="true">*</span></Form.Label>
+            <Form.Label>
+              ¿Para quién deseas tu seguro? <span className="required" aria-hidden="true">*</span>
+            </Form.Label>
             <Form.Select
               value={data.planType}
               onChange={(event) => updateData("planType", event.target.value)}
@@ -168,7 +157,8 @@ function StepOne({ data, updateData }) {
             </Form.Select>
           </Form.Group>
         </Col>
-        <Col md={6}>
+
+        <Col md={12}>
           <Form.Group controlId="budget">
             <Form.Label>Presupuesto orientativo (opcional)</Form.Label>
             <Form.Select value={data.budget} onChange={(event) => updateData("budget", event.target.value)}>
@@ -183,22 +173,93 @@ function StepOne({ data, updateData }) {
     </section>
   );
 }
-
 function StepTwo({ data, updateData }) {
-  const filtered = useMemo(() => {
+  // Estado local para alternar la vista del mini chat de asesoría con el icono de audífonos
+  const [showChat, setShowChat] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { sender: "bot", text: "¡Hola! 🎧 Cuéntame, ¿tienes alguna duda sobre los precios o las coberturas?" }
+  ]);
+  const [inputMessage, setInputMessage] = useState("");
+
+  const filteredCategories = useMemo(() => {
     if (data.userKind === "empresa") return CATEGORIES.filter((item) => item.id === "empresas");
     return CATEGORIES.filter((item) => item.id !== "empresas");
   }, [data.userKind]);
 
+  const currentPlans = PLANS_BY_CATEGORY[data.category] || [];
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!inputMessage.trim()) return;
+
+    setChatMessages((prev) => [...prev, { sender: "user", text: inputMessage }]);
+    setInputMessage("");
+
+    setTimeout(() => {
+      setChatMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "Entendido. Un asesor especializado tomará tu consulta en breve." }
+      ]);
+    }, 800);
+  };
+
   return (
-    <section aria-label="Paso 2: Explorar categorías y preferencias">
-      <p className="section-intro">
-        Selecciona la categoría de protección que deseas y cuéntanos cómo prefieres tomar tu decisión.
-      </p>
+    <section aria-label="Paso 2: Explorar categorías y comparar planes">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <p className="section-intro m-0">
+          Selecciona la categoría de protección, compara los planes y su precio mensual.
+        </p>
+        
+        {/* Botón con icono de audífonos para abrir/cerrar el chat de preguntas integrada */}
+        <Button
+          variant={showChat ? "secondary" : "outline-primary"}
+          size="sm"
+          className="d-flex align-items-center gap-2 rounded-pill px-3"
+          onClick={() => setShowChat(!showChat)}
+        >
+          <span style={{ fontSize: "1.1rem" }}>🎧</span>
+          <span className="fw-semibold">{showChat ? "Ocultar chat" : "Preguntale el asesor virtual"}</span>
+        </Button>
+      </div>
+
+      {/* Mini Chat Integrado (Se muestra dentro del paso si el usuario hace clic en el audífono) */}
+      {showChat && (
+        <Card className="mb-4 border bg-light shadow-sm">
+          <Card.Body>
+            <div className="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom">
+              <span style={{ fontSize: "1.2rem" }}>🎧</span>
+              <strong className="text-primary small">Chat de asistencia en línea</strong>
+            </div>
+            <div style={{ maxHeight: "150px", overflowY: "auto" }} className="mb-3 px-1">
+              {chatMessages.map((msg, idx) => (
+                <div key={idx} className={`d-flex mb-1 ${msg.sender === "user" ? "justify-content-end" : "justify-content-start"}`}>
+                  <div className={`p-2 rounded small ${msg.sender === "user" ? "bg-primary text-white" : "bg-white border text-dark"}`} style={{ maxWidth: "85%" }}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Form onSubmit={handleSendMessage} className="d-flex gap-2">
+              <Form.Control
+                type="text"
+                size="sm"
+                placeholder="Escribe tu pregunta sobre coberturas..."
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+              />
+              <Button type="submit" variant="primary" size="sm">Enviar</Button>
+            </Form>
+          </Card.Body>
+        </Card>
+      )}
+
+      {/* 1. Selección de Categoría */}
       <fieldset className="mb-4">
-        <legend className="form-label fs-6 fw-bold">¿Qué área deseas proteger? <span className="required" aria-hidden="true">*</span></legend>
+        <legend className="form-label fs-6 fw-bold">
+          1. ¿Qué área deseas proteger? <span className="required" aria-hidden="true">*</span>
+        </legend>
         <Row className="g-3" role="radiogroup" aria-label="Categorías de servicio">
-          {filtered.map((category) => (
+          {filteredCategories.map((category) => (
             <Col md={6} key={category.id}>
               <Form.Check
                 type="radio"
@@ -206,48 +267,79 @@ function StepTwo({ data, updateData }) {
                 name="category"
                 className="visually-hidden"
                 checked={data.category === category.id}
-                onChange={() => updateData("category", category.id)}
+                onChange={() => {
+                  updateData("category", category.id);
+                  updateData("selectedPlan", ""); // Reinicia el plan al cambiar categoría
+                }}
                 label={category.title}
               />
               <label
                 htmlFor={`category-${category.id}`}
-                className={`category-option ${data.category === category.id ? "selected" : ""}`}
+                className={`category-option p-3 rounded border d-block ${data.category === category.id ? "border-success bg-light shadow-sm" : ""}`}
+                style={{ cursor: "pointer" }}
               >
-                <span className="category-check" aria-hidden="true">{data.category === category.id ? "✓" : "+"}</span>
-                <strong>{category.title}</strong>
-                <span>{category.description}</span>
+                <div className="d-flex align-items-center gap-2">
+                  <span className="category-check fw-bold" aria-hidden="true">
+                    {data.category === category.id ? "✓" : "+"}
+                  </span>
+                  <strong>{category.title}</strong>
+                </div>
+                <small className="text-muted d-block mt-1">{category.description}</small>
               </label>
             </Col>
           ))}
         </Row>
       </fieldset>
 
-      <hr className="my-4" />
-      <fieldset>
-        <legend className="form-label fs-6 fw-bold">¿Cómo describes tu estilo para decidir? <span className="required" aria-hidden="true">*</span></legend>
-        <Row className="g-3" role="radiogroup" aria-label="Perfil de toma de decisión">
-          {USER_TYPES.map((type) => (
-            <Col lg={4} key={type.id}>
-              <Form.Check
-                type="radio"
-                id={`profile-${type.id}`}
-                name="profile"
-                className="visually-hidden"
-                checked={data.profile === type.id}
-                onChange={() => updateData("profile", type.id)}
-                label={type.title}
-              />
-              <label
-                htmlFor={`profile-${type.id}`}
-                className={`profile-option ${data.profile === type.id ? "selected" : ""}`}
-              >
-                <strong>{type.title}</strong>
-                <span>{type.description}</span>
-              </label>
-            </Col>
-          ))}
-        </Row>
-      </fieldset>
+      {/* 2. Comparador de Planes y Precios Mensuales (Aparece al seleccionar una categoría) */}
+      {data.category && (
+        <fieldset className="mb-4">
+          <legend className="form-label fs-6 fw-bold mb-3">
+            2. Compara los planes y precios mensuales disponibles:
+          </legend>
+          <Row className="g-3">
+            {currentPlans.map((plan) => {
+              const isSelected = data.selectedPlan === plan.id;
+              return (
+                <Col md={4} key={plan.id}>
+                  <Card className={`h-100 border ${isSelected ? "border-success shadow" : "border-light"}`}>
+                    <Card.Body className="d-flex flex-column justify-content-between">
+                      <div>
+                        {plan.badge && (
+                          <Badge bg="success" className="mb-2">
+                            {plan.badge}
+                          </Badge>
+                        )}
+                        <Card.Title as="h3" className="h5 fw-bold mb-1">
+                          {plan.name}
+                        </Card.Title>
+                        <div className="text-success fs-4 fw-bold my-2">
+                          {plan.price} <small className="fs-6 text-muted fw-normal">/mes</small>
+                        </div>
+                        <ul className="list-unstyled small mt-3">
+                          {plan.features.map((feat, idx) => (
+                            <li key={idx} className="mb-1 d-flex align-items-start gap-1">
+                              <span className="text-success fw-bold">✓</span> {feat}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <Button
+                        variant={isSelected ? "success" : "outline-secondary"}
+                        className="w-100 mt-3"
+                        onClick={() => updateData("selectedPlan", plan.id)}
+                      >
+                        {isSelected ? "Plan seleccionado ✓" : "Elegir este plan"}
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+        </fieldset>
+      )}
+
       {data.profile && (
         <Alert variant="info" className="mt-4 recommendation-alert" role="status" aria-live="polite">
           <strong>Enfoque recomendado:</strong>{" "}
@@ -257,6 +349,32 @@ function StepTwo({ data, updateData }) {
     </section>
   );
 }
+
+
+const PLANS_BY_CATEGORY = {
+  vida: [
+    { id: "v_basico", name: "Vida Esencial", price: "$45.000", badge: "", features: ["Cobertura por fallecimiento", "Gastos exequiales básico"] },
+    { id: "v_intermedio", name: "Vida Tranquilidad", price: "$85.000", badge: "Más elegido", features: ["Cobertura por fallecimiento", "Invalidez o incapacidad", "Renta diaria por hospitalización"] },
+    { id: "v_premium", name: "Vida Total Gold", price: "$140.000", badge: "Premium", features: ["Cobertura fallecimiento amplia", "Enfermedades graves", "Asistencia médica internacional"] }
+  ],
+  salud: [
+    { id: "s_basico", name: "Salud Básico", price: "$65.000", badge: "", features: ["Atención médica general", "Descuentos en laboratorios"] },
+    { id: "s_intermedio", name: "Salud Plus", price: "$120.000", badge: "Recomendado", features: ["Especialistas directos", "Urgencias 24/7", "Exámenes diagnósticos"] },
+    { id: "s_premium", name: "Salud Élite", price: "$210.000", badge: "Completo", features: ["Red de clínicas top", "Cobertura internacional", "Habitación individual"] }
+  ],
+  accidentes: [
+    { id: "a_basico", name: "Protección Vial", price: "$25.000", badge: "", features: ["Incapacidad por accidente", "Gastos médicos primarios"] },
+    { id: "a_intermedio", name: "Accidentes 24/7", price: "$48.000", badge: "Popular", features: ["Cobertura laboral y personal", "Renta por hospitalización"] },
+    { id: "a_premium", name: "Protección Global", price: "$80.000", badge: "Sin deducible", features: ["Cobertura de alto riesgo", "Reembolso 100% gastos"] }
+  ],
+  empresas: [
+    { id: "e_basico", name: "Pyme Esencial", price: "$180.000", badge: "", features: ["Vida colectivo (hasta 5)", "Responsabilidad civil básica"] },
+    { id: "e_intermedio", name: "Corporativo Pro", price: "$350.000", badge: "Negocios", features: ["Protección de activos", "Aseguramiento de nómina"] },
+    { id: "e_premium", name: "Enterprise Custom", price: "$600.000", badge: "A la medida", features: ["Riesgos laborales top", "Póliza multirriesgo"] }
+  ]
+};
+
+
 
 function StepThree({ data, updateData, onRequestQuote, onPurchase }) {
   const selectedProfile = USER_TYPES.find((item) => item.id === data.profile);
@@ -535,7 +653,7 @@ function WelcomeScreen({ onStart }) {
             className="welcome-description text-white fs-5 mb-0 fw-light text-center lh-base" 
             style={{ textShadow: "0 2px 8px rgba(0,0,0,0.4)", opacity: 0.92 }}
           >
-            Diseña tu protección ideal a tu propio ritmo. Puedes avanzar o regresar en cualquier momento sin perder la información ingresada.
+      Cotiza sin prisas ni complicaciones. Tu información se guarda automáticamente para que puedas avanzar o regresar en cualquier momento.
           </p>
         </div>
 
@@ -617,10 +735,7 @@ export default function App() {
   // Validación campo por campo con Toasts descriptivos específicos
   const validateStep = (step) => {
     if (step === 1) {
-      if (!data.userKind) {
-        notify("Campo requerido", "Selecciona para quién deseas el seguro.", "warning");
-        return false;
-      }
+    
       if (!data.ages.trim()) {
         notify("Edades faltantes", "Ingresa las edades de las personas a asegurar.", "warning");
         return false;
@@ -640,10 +755,7 @@ export default function App() {
         notify("Categoría requerida", "Selecciona el área que deseas proteger.", "warning");
         return false;
       }
-      if (!data.profile) {
-        notify("Estilo requerido", "Indica tu estilo preferido para tomar la decisión.", "warning");
-        return false;
-      }
+     
     }
 
     if (step === 3) {
