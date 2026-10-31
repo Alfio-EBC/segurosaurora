@@ -18,6 +18,7 @@ import {
   Tab,
   Tabs,
   Toast,
+  Dropdown,
   ToastContainer,
 } from "react-bootstrap";
 
@@ -36,28 +37,50 @@ const USER_TYPES = [
   {
     id: "impaciente",
     title: "Práctico y ágil",
-    description: "Prefieres pocos pasos, información directa y una decisión rápida.",
-    recommendation: "Te mostraremos un resumen ejecutivo con la opción de descargar tu cotización al instante.",
+    description:
+      "Prefieres pocos pasos, información directa y una decisión rápida.",
+    recommendation:
+      "Te mostraremos un resumen ejecutivo con la opción de descargar tu cotización al instante.",
   },
   {
     id: "analitico",
     title: "Detallista",
-    description: "Te gusta comparar coberturas, condiciones y beneficios a fondo.",
-    recommendation: "Destacaremos los detalles de coberturas, exclusiones y documentos clave para ti.",
+    description:
+      "Te gusta comparar coberturas, condiciones y beneficios a fondo.",
+    recommendation:
+      "Destacaremos los detalles de coberturas, exclusiones y documentos clave para ti.",
   },
   {
     id: "corporativo",
     title: "Empresarial",
-    description: "Buscas protección a la medida para tu compañía o equipo de trabajo.",
-    recommendation: "Priorizaremos soluciones corporativas y la opción de contacto directo con un asesor especializado.",
+    description:
+      "Buscas protección a la medida para tu compañía o equipo de trabajo.",
+    recommendation:
+      "Priorizaremos soluciones corporativas y la opción de contacto directo con un asesor especializado.",
   },
 ];
 
 const CATEGORIES = [
-  { id: "vida", title: "Vida", description: "Respaldo y estabilidad económica para tu familia." },
-  { id: "salud", title: "Salud", description: "Bienestar integral y acceso a red médica preferencial." },
-  { id: "accidentes", title: "Accidentes personales", description: "Protección y tranquilidad ante imprevistos diarios." },
-  { id: "empresas", title: "Empresas", description: "Soluciones de alta cobertura para organizaciones." },
+  {
+    id: "vida",
+    title: "Vida",
+    description: "Respaldo y estabilidad económica para tu familia.",
+  },
+  {
+    id: "salud",
+    title: "Salud",
+    description: "Bienestar integral y acceso a red médica preferencial.",
+  },
+  {
+    id: "accidentes",
+    title: "Accidentes personales",
+    description: "Protección y tranquilidad ante imprevistos diarios.",
+  },
+  {
+    id: "empresas",
+    title: "Empresas",
+    description: "Soluciones de alta cobertura para organizaciones.",
+  },
 ];
 
 function ActionTooltip({ text, children }) {
@@ -80,12 +103,21 @@ function StepIndicator({ currentStep, onStepClick }) {
   };
 
   return (
-    <nav aria-label="Progreso de la cotización" className="stepper mb-4" role="navigation">
+    <nav
+      aria-label="Progreso de la cotización"
+      className="stepper mb-4"
+      role="navigation"
+    >
       {STEPS.map((step, index) => {
         const number = index + 1;
         const completed = number < currentStep;
         const active = number === currentStep;
-        const tooltipText = getStepTooltip(number, step.title, completed, active);
+        const tooltipText = getStepTooltip(
+          number,
+          step.title,
+          completed,
+          active,
+        );
 
         return (
           <ActionTooltip key={step.title} text={tooltipText}>
@@ -118,13 +150,17 @@ function StepOne({ data, updateData }) {
   return (
     <section aria-label="Paso 1: Filtrar datos de cotización">
       <p className="section-intro">
-        Cuéntanos quién se va a proteger y qué tipo de cobertura buscas. Diseñaremos las mejores alternativas para ti.
+        Cuéntanos quién se va a proteger y qué tipo de cobertura buscas.
+        Diseñaremos las mejores alternativas para ti.
       </p>
       <Row className="g-3">
         <Col md={6}>
           <Form.Group controlId="ages">
             <Form.Label>
-              Edades de los asegurados <span className="required" aria-hidden="true">*</span>
+              Edades de los asegurados{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
             </Form.Label>
             <Form.Control
               value={data.ages}
@@ -134,14 +170,19 @@ function StepOne({ data, updateData }) {
               aria-required="true"
               required
             />
-            <Form.Text id="agesHelp">Escribe solo las edades separadas por comas (sin nombres).</Form.Text>
+            <Form.Text id="agesHelp">
+              Escribe solo las edades separadas por comas (sin nombres).
+            </Form.Text>
           </Form.Group>
         </Col>
 
         <Col md={6}>
           <Form.Group controlId="planType">
             <Form.Label>
-              ¿Para quién deseas tu seguro? <span className="required" aria-hidden="true">*</span>
+              ¿Para quién deseas tu seguro?{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
             </Form.Label>
             <Form.Select
               value={data.planType}
@@ -161,7 +202,10 @@ function StepOne({ data, updateData }) {
         <Col md={12}>
           <Form.Group controlId="budget">
             <Form.Label>¿Que tipo de Seguro buscas?</Form.Label>
-            <Form.Select value={data.budget} onChange={(event) => updateData("budget", event.target.value)}>
+            <Form.Select
+              value={data.budget}
+              onChange={(event) => updateData("budget", event.target.value)}
+            >
               <option value="">Prefiero explorar todas las opciones</option>
               <option value="bajo">Económico / Básico</option>
               <option value="medio">Equilibrado / Intermedio</option>
@@ -177,12 +221,16 @@ function StepTwo({ data, updateData }) {
   // Estado local para alternar la vista del mini chat de asesoría con el icono de audífonos
   const [showChat, setShowChat] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { sender: "bot", text: "¡Hola! 🎧 Cuéntame, ¿tienes alguna duda sobre los precios o las coberturas?" }
+    {
+      sender: "bot",
+      text: "¡Hola! 🎧 Cuéntame, ¿tienes alguna duda sobre los precios o las coberturas?",
+    },
   ]);
   const [inputMessage, setInputMessage] = useState("");
 
   const filteredCategories = useMemo(() => {
-    if (data.userKind === "empresa") return CATEGORIES.filter((item) => item.id === "empresas");
+    if (data.userKind === "empresa")
+      return CATEGORIES.filter((item) => item.id === "empresas");
     return CATEGORIES.filter((item) => item.id !== "empresas");
   }, [data.userKind]);
 
@@ -192,13 +240,19 @@ function StepTwo({ data, updateData }) {
     e.preventDefault();
     if (!inputMessage.trim()) return;
 
-    setChatMessages((prev) => [...prev, { sender: "user", text: inputMessage }]);
+    setChatMessages((prev) => [
+      ...prev,
+      { sender: "user", text: inputMessage },
+    ]);
     setInputMessage("");
 
     setTimeout(() => {
       setChatMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "Entendido. Un asesor especializado tomará tu consulta en breve." }
+        {
+          sender: "bot",
+          text: "Entendido. Un asesor especializado tomará tu consulta en breve.",
+        },
       ]);
     }, 800);
   };
@@ -207,9 +261,10 @@ function StepTwo({ data, updateData }) {
     <section aria-label="Paso 2: Explorar categorías y comparar planes">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <p className="section-intro m-0">
-          Selecciona la categoría de protección, compara los planes y su precio mensual.
+          Selecciona la categoría de protección, compara los planes y su precio
+          mensual.
         </p>
-        
+
         {/* Botón con icono de audífonos para abrir/cerrar el chat de preguntas integrada */}
         <Button
           variant={showChat ? "secondary" : "outline-primary"}
@@ -218,7 +273,9 @@ function StepTwo({ data, updateData }) {
           onClick={() => setShowChat(!showChat)}
         >
           <span style={{ fontSize: "1.1rem" }}>🎧</span>
-          <span className="fw-semibold">{showChat ? "Ocultar chat" : "Preguntale el asesor virtual"}</span>
+          <span className="fw-semibold">
+            {showChat ? "Ocultar chat" : "Preguntale el asesor virtual"}
+          </span>
         </Button>
       </div>
 
@@ -228,12 +285,23 @@ function StepTwo({ data, updateData }) {
           <Card.Body>
             <div className="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom">
               <span style={{ fontSize: "1.2rem" }}>🎧</span>
-              <strong className="text-primary small">Chat de asistencia en línea</strong>
+              <strong className="text-primary small">
+                Chat de asistencia en línea
+              </strong>
             </div>
-            <div style={{ maxHeight: "150px", overflowY: "auto" }} className="mb-3 px-1">
+            <div
+              style={{ maxHeight: "150px", overflowY: "auto" }}
+              className="mb-3 px-1"
+            >
               {chatMessages.map((msg, idx) => (
-                <div key={idx} className={`d-flex mb-1 ${msg.sender === "user" ? "justify-content-end" : "justify-content-start"}`}>
-                  <div className={`p-2 rounded small ${msg.sender === "user" ? "bg-primary text-white" : "bg-white border text-dark"}`} style={{ maxWidth: "85%" }}>
+                <div
+                  key={idx}
+                  className={`d-flex mb-1 ${msg.sender === "user" ? "justify-content-end" : "justify-content-start"}`}
+                >
+                  <div
+                    className={`p-2 rounded small ${msg.sender === "user" ? "bg-primary text-white" : "bg-white border text-dark"}`}
+                    style={{ maxWidth: "85%" }}
+                  >
                     {msg.text}
                   </div>
                 </div>
@@ -247,7 +315,9 @@ function StepTwo({ data, updateData }) {
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
               />
-              <Button type="submit" variant="primary" size="sm">Enviar</Button>
+              <Button type="submit" variant="primary" size="sm">
+                Enviar
+              </Button>
             </Form>
           </Card.Body>
         </Card>
@@ -256,9 +326,16 @@ function StepTwo({ data, updateData }) {
       {/* 1. Selección de Categoría */}
       <fieldset className="mb-4">
         <legend className="form-label fs-6 fw-bold">
-          1. ¿Qué área deseas proteger? <span className="required" aria-hidden="true">*</span>
+          1. ¿Qué área deseas proteger?{" "}
+          <span className="required" aria-hidden="true">
+            *
+          </span>
         </legend>
-        <Row className="g-3" role="radiogroup" aria-label="Categorías de servicio">
+        <Row
+          className="g-3"
+          role="radiogroup"
+          aria-label="Categorías de servicio"
+        >
           {filteredCategories.map((category) => (
             <Col md={6} key={category.id}>
               <Form.Check
@@ -284,7 +361,9 @@ function StepTwo({ data, updateData }) {
                   </span>
                   <strong>{category.title}</strong>
                 </div>
-                <small className="text-muted d-block mt-1">{category.description}</small>
+                <small className="text-muted d-block mt-1">
+                  {category.description}
+                </small>
               </label>
             </Col>
           ))}
@@ -302,7 +381,9 @@ function StepTwo({ data, updateData }) {
               const isSelected = data.selectedPlan === plan.id;
               return (
                 <Col md={4} key={plan.id}>
-                  <Card className={`h-100 border ${isSelected ? "border-success shadow" : "border-light"}`}>
+                  <Card
+                    className={`h-100 border ${isSelected ? "border-success shadow" : "border-light"}`}
+                  >
                     <Card.Body className="d-flex flex-column justify-content-between">
                       <div>
                         {plan.badge && (
@@ -314,12 +395,19 @@ function StepTwo({ data, updateData }) {
                           {plan.name}
                         </Card.Title>
                         <div className="text-success fs-4 fw-bold my-2">
-                          {plan.price} <small className="fs-6 text-muted fw-normal">/mes</small>
+                          {plan.price}{" "}
+                          <small className="fs-6 text-muted fw-normal">
+                            /mes
+                          </small>
                         </div>
                         <ul className="list-unstyled small mt-3">
                           {plan.features.map((feat, idx) => (
-                            <li key={idx} className="mb-1 d-flex align-items-start gap-1">
-                              <span className="text-success fw-bold">✓</span> {feat}
+                            <li
+                              key={idx}
+                              className="mb-1 d-flex align-items-start gap-1"
+                            >
+                              <span className="text-success fw-bold">✓</span>{" "}
+                              {feat}
                             </li>
                           ))}
                         </ul>
@@ -329,7 +417,9 @@ function StepTwo({ data, updateData }) {
                         className="w-100 mt-3"
                         onClick={() => updateData("selectedPlan", plan.id)}
                       >
-                        {isSelected ? "Plan seleccionado ✓" : "Elegir este plan"}
+                        {isSelected
+                          ? "Plan seleccionado ✓"
+                          : "Elegir este plan"}
                       </Button>
                     </Card.Body>
                   </Card>
@@ -341,7 +431,12 @@ function StepTwo({ data, updateData }) {
       )}
 
       {data.profile && (
-        <Alert variant="info" className="mt-4 recommendation-alert" role="status" aria-live="polite">
+        <Alert
+          variant="info"
+          className="mt-4 recommendation-alert"
+          role="status"
+          aria-live="polite"
+        >
           <strong>Enfoque recomendado:</strong>{" "}
           {USER_TYPES.find((item) => item.id === data.profile)?.recommendation}
         </Alert>
@@ -350,64 +445,196 @@ function StepTwo({ data, updateData }) {
   );
 }
 
-
 const PLANS_BY_CATEGORY = {
   vida: [
-    { id: "v_basico", name: "Vida Esencial", price: "$45.000", badge: "", features: ["Cobertura por fallecimiento", "Gastos exequiales básico"] },
-    { id: "v_intermedio", name: "Vida Tranquilidad", price: "$85.000", badge: "Más elegido", features: ["Cobertura por fallecimiento", "Invalidez o incapacidad", "Renta diaria por hospitalización"] },
-    { id: "v_premium", name: "Vida Total Gold", price: "$140.000", badge: "Premium", features: ["Cobertura fallecimiento amplia", "Enfermedades graves", "Asistencia médica internacional"] }
+    {
+      id: "v_basico",
+      name: "Vida Esencial",
+      price: "$45.000",
+      badge: "",
+      features: ["Cobertura por fallecimiento", "Gastos exequiales básico"],
+    },
+    {
+      id: "v_intermedio",
+      name: "Vida Tranquilidad",
+      price: "$85.000",
+      badge: "Más elegido",
+      features: [
+        "Cobertura por fallecimiento",
+        "Invalidez o incapacidad",
+        "Renta diaria por hospitalización",
+      ],
+    },
+    {
+      id: "v_premium",
+      name: "Vida Total Gold",
+      price: "$140.000",
+      badge: "Premium",
+      features: [
+        "Cobertura fallecimiento amplia",
+        "Enfermedades graves",
+        "Asistencia médica internacional",
+      ],
+    },
   ],
   salud: [
-    { id: "s_basico", name: "Salud Básico", price: "$65.000", badge: "", features: ["Atención médica general", "Descuentos en laboratorios"] },
-    { id: "s_intermedio", name: "Salud Plus", price: "$120.000", badge: "Recomendado", features: ["Especialistas directos", "Urgencias 24/7", "Exámenes diagnósticos"] },
-    { id: "s_premium", name: "Salud Élite", price: "$210.000", badge: "Completo", features: ["Red de clínicas top", "Cobertura internacional", "Habitación individual"] }
+    {
+      id: "s_basico",
+      name: "Salud Básico",
+      price: "$65.000",
+      badge: "",
+      features: ["Atención médica general", "Descuentos en laboratorios"],
+    },
+    {
+      id: "s_intermedio",
+      name: "Salud Plus",
+      price: "$120.000",
+      badge: "Recomendado",
+      features: [
+        "Especialistas directos",
+        "Urgencias 24/7",
+        "Exámenes diagnósticos",
+      ],
+    },
+    {
+      id: "s_premium",
+      name: "Salud Élite",
+      price: "$210.000",
+      badge: "Completo",
+      features: [
+        "Red de clínicas top",
+        "Cobertura internacional",
+        "Habitación individual",
+      ],
+    },
   ],
   accidentes: [
-    { id: "a_basico", name: "Protección Vial", price: "$25.000", badge: "", features: ["Incapacidad por accidente", "Gastos médicos primarios"] },
-    { id: "a_intermedio", name: "Accidentes 24/7", price: "$48.000", badge: "Popular", features: ["Cobertura laboral y personal", "Renta por hospitalización"] },
-    { id: "a_premium", name: "Protección Global", price: "$80.000", badge: "Sin deducible", features: ["Cobertura de alto riesgo", "Reembolso 100% gastos"] }
+    {
+      id: "a_basico",
+      name: "Protección Vial",
+      price: "$25.000",
+      badge: "",
+      features: ["Incapacidad por accidente", "Gastos médicos primarios"],
+    },
+    {
+      id: "a_intermedio",
+      name: "Accidentes 24/7",
+      price: "$48.000",
+      badge: "Popular",
+      features: ["Cobertura laboral y personal", "Renta por hospitalización"],
+    },
+    {
+      id: "a_premium",
+      name: "Protección Global",
+      price: "$80.000",
+      badge: "Sin deducible",
+      features: ["Cobertura de alto riesgo", "Reembolso 100% gastos"],
+    },
   ],
   empresas: [
-    { id: "e_basico", name: "Pyme Esencial", price: "$180.000", badge: "", features: ["Vida colectivo (hasta 5)", "Responsabilidad civil básica"] },
-    { id: "e_intermedio", name: "Corporativo Pro", price: "$350.000", badge: "Negocios", features: ["Protección de activos", "Aseguramiento de nómina"] },
-    { id: "e_premium", name: "Enterprise Custom", price: "$600.000", badge: "A la medida", features: ["Riesgos laborales top", "Póliza multirriesgo"] }
-  ]
+    {
+      id: "e_basico",
+      name: "Pyme Esencial",
+      price: "$180.000",
+      badge: "",
+      features: ["Vida colectivo (hasta 5)", "Responsabilidad civil básica"],
+    },
+    {
+      id: "e_intermedio",
+      name: "Corporativo Pro",
+      price: "$350.000",
+      badge: "Negocios",
+      features: ["Protección de activos", "Aseguramiento de nómina"],
+    },
+    {
+      id: "e_premium",
+      name: "Enterprise Custom",
+      price: "$600.000",
+      badge: "A la medida",
+      features: ["Riesgos laborales top", "Póliza multirriesgo"],
+    },
+  ],
 };
-
-
 
 function StepThree({ data, updateData, onRequestQuote, onPurchase }) {
   const selectedProfile = USER_TYPES.find((item) => item.id === data.profile);
-  const corporate = data.userKind === "empresa" || data.profile === "corporativo";
+  const corporate =
+    data.userKind === "empresa" || data.profile === "corporativo";
   return (
     <section aria-label="Paso 3: Elegir modalidad de cotización o compra">
       <p className="section-intro">
-        Estás a un paso de asegurar tu tranquilidad. Guarda tu cotización detallada o avanza directamente a la contratación.
+        Estás a un paso de asegurar tu tranquilidad. Guarda tu cotización
+        detallada o avanza directamente a la contratación.
       </p>
       {selectedProfile && (
         <Alert variant="light" className="profile-summary" role="status">
-          <Badge bg="secondary" className="me-2">Tu estilo</Badge>
-          <strong>{selectedProfile.title}.</strong> {selectedProfile.recommendation}
+          <Badge bg="secondary" className="me-2">
+            Tu estilo
+          </Badge>
+          <strong>{selectedProfile.title}.</strong>{" "}
+          {selectedProfile.recommendation}
         </Alert>
       )}
       <Row className="g-3">
         <Col md={6}>
           <Card className="choice-card h-100">
             <Card.Body>
-              <div className="choice-icon" aria-hidden="true">↧</div>
-              <Card.Title as="h3" className="h5">Guardar cotización</Card.Title>
-              <Card.Text>Te enviamos un resumen completo a tu correo para analizarlo con calma.</Card.Text>
+              <div className="choice-icon" aria-hidden="true">
+                ↧
+              </div>
+              <Card.Title as="h3" className="h5">
+                Guardar cotización
+              </Card.Title>
+              <Card.Text>
+                Te enviamos un resumen completo a tu correo para analizarlo con
+                calma.
+              </Card.Text>
               <Form.Group controlId="quoteName" className="mb-3">
-                <Form.Label>Nombre y apellido <span className="required" aria-hidden="true">*</span></Form.Label>
-                <Form.Control value={data.name} onChange={(e) => updateData("name", e.target.value)} autoComplete="name" required aria-required="true" />
+                <Form.Label>
+                  Nombre y apellido{" "}
+                  <span className="required" aria-hidden="true">
+                    *
+                  </span>
+                </Form.Label>
+                <Form.Control
+                  value={data.name}
+                  onChange={(e) => updateData("name", e.target.value)}
+                  autoComplete="name"
+                  required
+                  aria-required="true"
+                />
               </Form.Group>
               <Form.Group controlId="quoteEmail" className="mb-3">
-                <Form.Label>Correo electrónico <span className="required" aria-hidden="true">*</span></Form.Label>
-                <Form.Control type="email" value={data.email} onChange={(e) => updateData("email", e.target.value)} autoComplete="email" required aria-required="true" />
+                <Form.Label>
+                  Correo electrónico{" "}
+                  <span className="required" aria-hidden="true">
+                    *
+                  </span>
+                </Form.Label>
+                <Form.Control
+                  type="email"
+                  value={data.email}
+                  onChange={(e) => updateData("email", e.target.value)}
+                  autoComplete="email"
+                  required
+                  aria-required="true"
+                />
               </Form.Group>
               <Form.Group controlId="quotePhone" className="mb-3">
-                <Form.Label>Teléfono de contacto <span className="required" aria-hidden="true">*</span></Form.Label>
-                <Form.Control type="tel" value={data.phone} onChange={(e) => updateData("phone", e.target.value)} autoComplete="tel" required aria-required="true" />
+                <Form.Label>
+                  Teléfono de contacto{" "}
+                  <span className="required" aria-hidden="true">
+                    *
+                  </span>
+                </Form.Label>
+                <Form.Control
+                  type="tel"
+                  value={data.phone}
+                  onChange={(e) => updateData("phone", e.target.value)}
+                  autoComplete="tel"
+                  required
+                  aria-required="true"
+                />
               </Form.Group>
               <Form.Check
                 id="quoteConsent"
@@ -418,7 +645,11 @@ function StepThree({ data, updateData, onRequestQuote, onPurchase }) {
               />
               <div className="mt-3">
                 <ActionTooltip text="Valida tus datos y genera tu cotización en formato digital.">
-                  <Button variant="primary" onClick={onRequestQuote} aria-label="Solicitar cotización en PDF">
+                  <Button
+                    variant="primary"
+                    onClick={onRequestQuote}
+                    aria-label="Solicitar cotización en PDF"
+                  >
                     Enviar cotización por correo
                   </Button>
                 </ActionTooltip>
@@ -429,8 +660,14 @@ function StepThree({ data, updateData, onRequestQuote, onPurchase }) {
         <Col md={6}>
           <Card className="choice-card h-100">
             <Card.Body>
-              <div className="choice-icon" aria-hidden="true">→</div>
-              <Card.Title as="h3" className="h5">{corporate ? "Asesoría especializada" : "Continuar con la contratación"}</Card.Title>
+              <div className="choice-icon" aria-hidden="true">
+                →
+              </div>
+              <Card.Title as="h3" className="h5">
+                {corporate
+                  ? "Asesoría especializada"
+                  : "Continuar con la contratación"}
+              </Card.Title>
               <Card.Text>
                 {corporate
                   ? "Un especialista se pondrá en contacto para diseñar una solución corporativa a la medida."
@@ -438,15 +675,24 @@ function StepThree({ data, updateData, onRequestQuote, onPurchase }) {
               </Card.Text>
               {corporate && (
                 <Alert variant="secondary" role="note">
-                  En este modo demo, simularemos el contacto directo con un asesor asignado.
+                  En este modo demo, simularemos el contacto directo con un
+                  asesor asignado.
                 </Alert>
               )}
               <ActionTooltip text="Conserva tu progreso y avanza hacia la validación de identidad y pago.">
-                <Button variant="primary" onClick={onPurchase} aria-label="Continuar con el flujo de compra">
-                  {corporate ? "Solicitar llamada con asesor" : "Iniciar contratación online →"}
+                <Button
+                  variant="primary"
+                  onClick={onPurchase}
+                  aria-label="Continuar con el flujo de compra"
+                >
+                  {corporate
+                    ? "Solicitar llamada con asesor"
+                    : "Iniciar contratación online →"}
                 </Button>
               </ActionTooltip>
-              <p className="small-muted mt-2">Ambiente de pruebas seguro y libre de cobros reales.</p>
+              <p className="small-muted mt-2">
+                Ambiente de pruebas seguro y libre de cobros reales.
+              </p>
             </Card.Body>
           </Card>
         </Col>
@@ -458,30 +704,80 @@ function StepThree({ data, updateData, onRequestQuote, onPurchase }) {
 function StepFour({ data, updateData }) {
   return (
     <section aria-label="Paso 4: Validar datos y declaración de salud">
-      <p className="section-intro">Por favor, confirma los datos del tomador y responde con honestidad la declaración de salud.</p>
+      <p className="section-intro">
+        Por favor, confirma los datos del tomador y responde con honestidad la
+        declaración de salud.
+      </p>
       <Row className="g-3">
         <Col md={6}>
           <Form.Group controlId="fullName">
-            <Form.Label>Nombre completo <span className="required" aria-hidden="true">*</span></Form.Label>
-            <Form.Control value={data.name} onChange={(e) => updateData("name", e.target.value)} autoComplete="name" required aria-required="true" />
+            <Form.Label>
+              Nombre completo{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </Form.Label>
+            <Form.Control
+              value={data.name}
+              onChange={(e) => updateData("name", e.target.value)}
+              autoComplete="name"
+              required
+              aria-required="true"
+            />
           </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group controlId="document">
-            <Form.Label>Documento de identidad <span className="required" aria-hidden="true">*</span></Form.Label>
-            <Form.Control value={data.document} onChange={(e) => updateData("document", e.target.value)} placeholder="Ej. CC 12345678" autoComplete="off" required aria-required="true" />
+            <Form.Label>
+              Documento de identidad{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </Form.Label>
+            <Form.Control
+              value={data.document}
+              onChange={(e) => updateData("document", e.target.value)}
+              placeholder="Ej. CC 12345678"
+              autoComplete="off"
+              required
+              aria-required="true"
+            />
           </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group controlId="email">
-            <Form.Label>Correo electrónico <span className="required" aria-hidden="true">*</span></Form.Label>
-            <Form.Control type="email" value={data.email} onChange={(e) => updateData("email", e.target.value)} autoComplete="email" required aria-required="true" />
+            <Form.Label>
+              Correo electrónico{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </Form.Label>
+            <Form.Control
+              type="email"
+              value={data.email}
+              onChange={(e) => updateData("email", e.target.value)}
+              autoComplete="email"
+              required
+              aria-required="true"
+            />
           </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group controlId="phone">
-            <Form.Label>Celular de contacto <span className="required" aria-hidden="true">*</span></Form.Label>
-            <Form.Control type="tel" value={data.phone} onChange={(e) => updateData("phone", e.target.value)} autoComplete="tel" required aria-required="true" />
+            <Form.Label>
+              Celular de contacto{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </Form.Label>
+            <Form.Control
+              type="tel"
+              value={data.phone}
+              onChange={(e) => updateData("phone", e.target.value)}
+              autoComplete="tel"
+              required
+              aria-required="true"
+            />
           </Form.Group>
         </Col>
       </Row>
@@ -503,22 +799,32 @@ function StepFour({ data, updateData }) {
         aria-required="true"
       />
       <Alert variant="warning" role="region" aria-label="Instrucciones OTP">
-        <strong>Verificación de seguridad:</strong> Te enviaremos un código temporal para validar tu identidad.
+        <strong>Verificación de seguridad:</strong> Te enviaremos un código
+        temporal para validar tu identidad.
       </Alert>
       <Form.Group controlId="otp">
-        <Form.Label>Código de verificación (OTP) <span className="required" aria-hidden="true">*</span></Form.Label>
+        <Form.Label>
+          Código de verificación (OTP){" "}
+          <span className="required" aria-hidden="true">
+            *
+          </span>
+        </Form.Label>
         <Form.Control
           inputMode="numeric"
           autoComplete="one-time-code"
           maxLength={6}
           value={data.otp}
-          onChange={(e) => updateData("otp", e.target.value.replace(/\D/g, "").slice(0, 6))}
+          onChange={(e) =>
+            updateData("otp", e.target.value.replace(/\D/g, "").slice(0, 6))
+          }
           placeholder="Ingresa el código de 6 dígitos"
           aria-describedby="otpHelp"
           aria-required="true"
           required
         />
-        <Form.Text id="otpHelp">Pista para pruebas: puedes escribir <strong>123456</strong>.</Form.Text>
+        <Form.Text id="otpHelp">
+          Pista para pruebas: puedes escribir <strong>123456</strong>.
+        </Form.Text>
       </Form.Group>
     </section>
   );
@@ -527,21 +833,46 @@ function StepFour({ data, updateData }) {
 function StepFive({ data, updateData }) {
   return (
     <section aria-label="Paso 5: Pagar y facturación">
-      <p className="section-intro">Indica cómo deseas realizar el pago de tu póliza. Recuerda que este es un entorno de pruebas.</p>
+      <p className="section-intro">
+        Indica cómo deseas realizar el pago de tu póliza. Recuerda que este es
+        un entorno de pruebas.
+      </p>
       <Alert variant="info" role="note">
-        Transacción simulada por seguridad. No se realizarán cargos reales a tus cuentas.
+        Transacción simulada por seguridad. No se realizarán cargos reales a tus
+        cuentas.
       </Alert>
       <Row className="g-3">
         <Col md={6}>
           <Form.Group controlId="payerName">
-            <Form.Label>Titular del medio de pago <span className="required" aria-hidden="true">*</span></Form.Label>
-            <Form.Control value={data.payerName} onChange={(e) => updateData("payerName", e.target.value)} autoComplete="cc-name" required aria-required="true" />
+            <Form.Label>
+              Titular del medio de pago{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </Form.Label>
+            <Form.Control
+              value={data.payerName}
+              onChange={(e) => updateData("payerName", e.target.value)}
+              autoComplete="cc-name"
+              required
+              aria-required="true"
+            />
           </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group controlId="paymentMethod">
-            <Form.Label>Pasarela o método de pago <span className="required" aria-hidden="true">*</span></Form.Label>
-            <Form.Select value={data.paymentMethod} onChange={(e) => updateData("paymentMethod", e.target.value)} required aria-required="true">
+            <Form.Label>
+              Pasarela o método de pago{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </Form.Label>
+            <Form.Select
+              value={data.paymentMethod}
+              onChange={(e) => updateData("paymentMethod", e.target.value)}
+              required
+              aria-required="true"
+            >
               <option value="">Selecciona una opción</option>
               <option value="payu">PayU (Tarjetas / PSE)</option>
               <option value="paypal">PayPal</option>
@@ -550,14 +881,37 @@ function StepFive({ data, updateData }) {
         </Col>
         <Col md={6}>
           <Form.Group controlId="billingEmail">
-            <Form.Label>Correo para recibir la factura <span className="required" aria-hidden="true">*</span></Form.Label>
-            <Form.Control type="email" value={data.email} onChange={(e) => updateData("email", e.target.value)} autoComplete="email" required aria-required="true" />
+            <Form.Label>
+              Correo para recibir la factura{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </Form.Label>
+            <Form.Control
+              type="email"
+              value={data.email}
+              onChange={(e) => updateData("email", e.target.value)}
+              autoComplete="email"
+              required
+              aria-required="true"
+            />
           </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group controlId="billingAddress">
-            <Form.Label>Dirección de correspondencia <span className="required" aria-hidden="true">*</span></Form.Label>
-            <Form.Control value={data.billingAddress} onChange={(e) => updateData("billingAddress", e.target.value)} autoComplete="street-address" required aria-required="true" />
+            <Form.Label>
+              Dirección de correspondencia{" "}
+              <span className="required" aria-hidden="true">
+                *
+              </span>
+            </Form.Label>
+            <Form.Control
+              value={data.billingAddress}
+              onChange={(e) => updateData("billingAddress", e.target.value)}
+              autoComplete="street-address"
+              required
+              aria-required="true"
+            />
           </Form.Group>
         </Col>
       </Row>
@@ -568,23 +922,77 @@ function StepFive({ data, updateData }) {
 function StepSix({ data, updateData }) {
   return (
     <section aria-label="Paso 6: Confirmación y calificación">
-      <div className="success-mark text-center mb-3" aria-hidden="true" style={{ fontSize: "2rem", color: "#00875A" }}>✓</div>
+      <div
+        className="success-mark text-center mb-3"
+        aria-hidden="true"
+        style={{ fontSize: "2rem", color: "#00875A" }}
+      >
+        ✓
+      </div>
       <h2 className="h4 text-center">¡Solicitud lista con éxito!</h2>
-      <p className="section-intro text-center">Revisa el resumen de los detalles de tu póliza seleccionada.</p>
-      <Card className="summary-card mb-4" role="region" aria-label="Resumen de solicitud">
+      <p className="section-intro text-center">
+        Revisa el resumen de los detalles de tu póliza seleccionada.
+      </p>
+      <Card
+        className="summary-card mb-4"
+        role="region"
+        aria-label="Resumen de solicitud"
+      >
         <Card.Body>
           <Row className="g-3">
-            <Col sm={6}><span className="summary-label d-block text-muted">Tipo de cliente</span><strong>{data.userKind === "empresa" ? "Empresa / persona jurídica" : "Persona o familia"}</strong></Col>
-            <Col sm={6}><span className="summary-label d-block text-muted">Categoría elegida</span><strong>{CATEGORIES.find((item) => item.id === data.category)?.title || "Sin seleccionar"}</strong></Col>
-            <Col sm={6}><span className="summary-label d-block text-muted">Modalidad</span><strong>{data.planType || "Sin seleccionar"}</strong></Col>
-            <Col sm={6}><span className="summary-label d-block text-muted">Método de pago</span><strong>{data.paymentMethod ? data.paymentMethod.toUpperCase() : "Sin seleccionar"}</strong></Col>
-            <Col sm={12}><span className="summary-label d-block text-muted">Correo electrónico registrado</span><strong>{data.email || "Sin registrar"}</strong></Col>
+            <Col sm={6}>
+              <span className="summary-label d-block text-muted">
+                Tipo de cliente
+              </span>
+              <strong>
+                {data.userKind === "empresa"
+                  ? "Empresa / persona jurídica"
+                  : "Persona o familia"}
+              </strong>
+            </Col>
+            <Col sm={6}>
+              <span className="summary-label d-block text-muted">
+                Categoría elegida
+              </span>
+              <strong>
+                {CATEGORIES.find((item) => item.id === data.category)?.title ||
+                  "Sin seleccionar"}
+              </strong>
+            </Col>
+            <Col sm={6}>
+              <span className="summary-label d-block text-muted">
+                Modalidad
+              </span>
+              <strong>{data.planType || "Sin seleccionar"}</strong>
+            </Col>
+            <Col sm={6}>
+              <span className="summary-label d-block text-muted">
+                Método de pago
+              </span>
+              <strong>
+                {data.paymentMethod
+                  ? data.paymentMethod.toUpperCase()
+                  : "Sin seleccionar"}
+              </strong>
+            </Col>
+            <Col sm={12}>
+              <span className="summary-label d-block text-muted">
+                Correo electrónico registrado
+              </span>
+              <strong>{data.email || "Sin registrar"}</strong>
+            </Col>
           </Row>
         </Card.Body>
       </Card>
       <fieldset>
-        <legend className="form-label fs-6 fw-bold">¿Cómo calificarías tu experiencia en este cotizador?</legend>
-        <div className="rating-options d-flex gap-2 mb-2" role="group" aria-label="Califica la experiencia del 1 al 5">
+        <legend className="form-label fs-6 fw-bold">
+          ¿Cómo calificarías tu experiencia en este cotizador?
+        </legend>
+        <div
+          className="rating-options d-flex gap-2 mb-2"
+          role="group"
+          aria-label="Califica la experiencia del 1 al 5"
+        >
           {[1, 2, 3, 4, 5].map((score) => (
             <Button
               key={score}
@@ -601,7 +1009,13 @@ function StepSix({ data, updateData }) {
       </fieldset>
       <Form.Group controlId="feedback" className="mt-3">
         <Form.Label>Comentarios o sugerencias (opcional)</Form.Label>
-        <Form.Control as="textarea" rows={3} value={data.feedback} onChange={(e) => updateData("feedback", e.target.value)} placeholder="¿Hay algo que podríamos haber hecho mejor?" />
+        <Form.Control
+          as="textarea"
+          rows={3}
+          value={data.feedback}
+          onChange={(e) => updateData("feedback", e.target.value)}
+          placeholder="¿Hay algo que podríamos haber hecho mejor?"
+        />
       </Form.Group>
     </section>
   );
@@ -609,12 +1023,12 @@ function StepSix({ data, updateData }) {
 
 function WelcomeScreen({ onStart }) {
   return (
-    <section 
-      className="welcome-screen min-vh-100" 
+    <section
+      className="welcome-screen min-vh-100"
       aria-labelledby="welcome-title"
     >
-      <div 
-        className="welcome-content d-flex flex-column align-items-center justify-content-center py-5 px-4 w-100 mx-auto text-center position-relative z-1" 
+      <div
+        className="welcome-content d-flex flex-column align-items-center justify-content-center py-5 px-4 w-100 mx-auto text-center position-relative z-1"
         style={{ maxWidth: "700px" }}
       >
         <div className="d-flex flex-column align-items-center justify-content-center w-100 mb-4">
@@ -631,29 +1045,56 @@ function WelcomeScreen({ onStart }) {
           </div>
 
           <div className="d-flex align-items-center justify-content-center gap-2">
-            <span style={{ width: "24px", height: "1px", backgroundColor: "rgba(255, 255, 255, 0.6)" }} aria-hidden="true"></span>
-            
-            <span className="text-uppercase fw-semibold tracking-widest text-light small" style={{ letterSpacing: "3px", fontSize: "0.8rem", opacity: 0.95 }}>
+            <span
+              style={{
+                width: "24px",
+                height: "1px",
+                backgroundColor: "rgba(255, 255, 255, 0.6)",
+              }}
+              aria-hidden="true"
+            ></span>
+
+            <span
+              className="text-uppercase fw-semibold tracking-widest text-light small"
+              style={{
+                letterSpacing: "3px",
+                fontSize: "0.8rem",
+                opacity: 0.95,
+              }}
+            >
               AURORA SEGUROS
             </span>
-            
-            <span style={{ width: "24px", height: "1px", backgroundColor: "rgba(255, 255, 255, 0.6)" }} aria-hidden="true"></span>
+
+            <span
+              style={{
+                width: "24px",
+                height: "1px",
+                backgroundColor: "rgba(255, 255, 255, 0.6)",
+              }}
+              aria-hidden="true"
+            ></span>
           </div>
         </div>
-        <h1 
-          id="welcome-title" 
-          className="display-4 fw-bold text-white text-center mb-4" 
-          style={{ letterSpacing: "-1px", lineHeight: "1.15", textShadow: "0 4px 20px rgba(0,0,0,0.4)" }}
+        <h1
+          id="welcome-title"
+          className="display-4 fw-bold text-white text-center mb-4"
+          style={{
+            letterSpacing: "-1px",
+            lineHeight: "1.15",
+            textShadow: "0 4px 20px rgba(0,0,0,0.4)",
+          }}
         >
           Tu tranquilidad comienza aquí
         </h1>
 
         <div className="mb-5" style={{ maxWidth: "540px" }}>
-          <p 
-            className="welcome-description text-white fs-5 mb-0 fw-light text-center lh-base" 
+          <p
+            className="welcome-description text-white fs-5 mb-0 fw-light text-center lh-base"
             style={{ textShadow: "0 2px 8px rgba(0,0,0,0.4)", opacity: 0.92 }}
           >
-      Cotiza sin prisas ni complicaciones. Tu información se guarda automáticamente para que puedas avanzar o regresar en cualquier momento.
+            Cotiza sin prisas ni complicaciones. Tu información se guarda
+            automáticamente para que puedas avanzar o regresar en cualquier
+            momento.
           </p>
         </div>
 
@@ -663,18 +1104,19 @@ function WelcomeScreen({ onStart }) {
             className="welcome-button px-5 py-3 fw-medium shadow-lg btn btn-success btn-lg rounded-pill mb-4"
             onClick={onStart}
             aria-label="Iniciar proceso de cotización de seguros"
-            style={{ 
-              backgroundColor: "#00875A", 
+            style={{
+              backgroundColor: "#00875A",
               borderColor: "#00875A",
               transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
               fontSize: "1.05rem",
-              letterSpacing: "0.5px"
+              letterSpacing: "0.5px",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = "#006E45";
               e.currentTarget.style.borderColor = "#006E45";
               e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow = "0 8px 25px rgba(0, 135, 90, 0.35)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 25px rgba(0, 135, 90, 0.35)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = "#00875A";
@@ -683,10 +1125,13 @@ function WelcomeScreen({ onStart }) {
               e.currentTarget.style.boxShadow = "";
             }}
           >
-            Comenzar cotización 
+            Comenzar cotización
           </Button>
-          
-          <p className="welcome-note small text-white-50 m-0 text-center" style={{ opacity: 0.75, letterSpacing: "0.2px" }}>
+
+          <p
+            className="welcome-note small text-white-50 m-0 text-center"
+            style={{ opacity: 0.75, letterSpacing: "0.2px" }}
+          >
             Proceso 100% confidencial · Te tomará solo un par de minutos
           </p>
         </div>
@@ -729,100 +1174,176 @@ export default function App() {
     variant: "success",
   });
 
-  const updateData = (field, value) => setData((previous) => ({ ...previous, [field]: value }));
-  const notify = (title, message, variant = "warning") => setToast({ show: true, title, message, variant });
+  const updateData = (field, value) =>
+    setData((previous) => ({ ...previous, [field]: value }));
+  const notify = (title, message, variant = "warning") =>
+    setToast({ show: true, title, message, variant });
 
   // Validación campo por campo con Toasts descriptivos específicos
   const validateStep = (step) => {
     if (step === 1) {
-    
       if (!data.ages.trim()) {
-        notify("Edades faltantes", "Ingresa las edades de las personas a asegurar.", "warning");
+        notify(
+          "Edades faltantes",
+          "Ingresa las edades de las personas a asegurar.",
+          "warning",
+        );
         return false;
       }
       if (!/^\s*\d{1,3}(\s*,\s*\d{1,3})*\s*$/.test(data.ages)) {
-        notify("Formato incorrecto", "Escribe las edades separadas por comas (Ej: 35, 32, 8).", "danger");
+        notify(
+          "Formato incorrecto",
+          "Escribe las edades separadas por comas (Ej: 35, 32, 8).",
+          "danger",
+        );
         return false;
       }
       if (!data.planType) {
-        notify("Modalidad faltante", "Selecciona un tipo de plan para continuar.", "warning");
+        notify(
+          "Modalidad faltante",
+          "Selecciona un tipo de plan para continuar.",
+          "warning",
+        );
         return false;
       }
     }
 
     if (step === 2) {
       if (!data.category) {
-        notify("Categoría requerida", "Selecciona el área que deseas proteger.", "warning");
+        notify(
+          "Categoría requerida",
+          "Selecciona el área que deseas proteger.",
+          "warning",
+        );
         return false;
       }
-     
     }
 
     if (step === 3) {
       if (!data.name.trim()) {
-        notify("Nombre requerido", "Ingresa tu nombre completo en la sección de descarga.", "warning");
+        notify(
+          "Nombre requerido",
+          "Ingresa tu nombre completo en la sección de descarga.",
+          "warning",
+        );
         return false;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-        notify("Correo inválido", "Escribe un correo electrónico válido.", "danger");
+        notify(
+          "Correo inválido",
+          "Escribe un correo electrónico válido.",
+          "danger",
+        );
         return false;
       }
       if (!data.phone.trim()) {
-        notify("Teléfono requerido", "Ingresa un número de teléfono de contacto.", "warning");
+        notify(
+          "Teléfono requerido",
+          "Ingresa un número de teléfono de contacto.",
+          "warning",
+        );
         return false;
       }
       if (!data.consent) {
-        notify("Autorización requerida", "Debes autorizar el tratamiento de tus datos para continuar.", "warning");
+        notify(
+          "Autorización requerida",
+          "Debes autorizar el tratamiento de tus datos para continuar.",
+          "warning",
+        );
         return false;
       }
     }
 
     if (step === 4) {
       if (!data.name.trim()) {
-        notify("Nombre faltante", "Ingresa el nombre completo del tomador.", "warning");
+        notify(
+          "Nombre faltante",
+          "Ingresa el nombre completo del tomador.",
+          "warning",
+        );
         return false;
       }
       if (!data.document.trim()) {
-        notify("Documento faltante", "Ingresa tu tipo y número de documento de identidad.", "warning");
+        notify(
+          "Documento faltante",
+          "Ingresa tu tipo y número de documento de identidad.",
+          "warning",
+        );
         return false;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-        notify("Correo inválido", "Verifica el formato de tu correo electrónico.", "danger");
+        notify(
+          "Correo inválido",
+          "Verifica el formato de tu correo electrónico.",
+          "danger",
+        );
         return false;
       }
       if (!data.phone.trim()) {
-        notify("Celular faltante", "Ingresa tu número de celular móvil.", "warning");
+        notify(
+          "Celular faltante",
+          "Ingresa tu número de celular móvil.",
+          "warning",
+        );
         return false;
       }
       if (!data.healthDeclaration) {
-        notify("Declaración obligatoria", "Debes confirmar la respuesta de la declaración de salud.", "warning");
+        notify(
+          "Declaración obligatoria",
+          "Debes confirmar la respuesta de la declaración de salud.",
+          "warning",
+        );
         return false;
       }
       if (!data.privacyConsent) {
-        notify("Aviso de privacidad", "Debes aceptar el aviso de privacidad y términos.", "warning");
+        notify(
+          "Aviso de privacidad",
+          "Debes aceptar el aviso de privacidad y términos.",
+          "warning",
+        );
         return false;
       }
       if (!/^\d{6}$/.test(data.otp)) {
-        notify("Código OTP inválido", "Ingresa el código de verificación de 6 dígitos (Ej: 123456).", "danger");
+        notify(
+          "Código OTP inválido",
+          "Ingresa el código de verificación de 6 dígitos (Ej: 123456).",
+          "danger",
+        );
         return false;
       }
     }
 
     if (step === 5) {
       if (!data.payerName.trim()) {
-        notify("Titular requerido", "Ingresa el nombre del titular del medio de pago.", "warning");
+        notify(
+          "Titular requerido",
+          "Ingresa el nombre del titular del medio de pago.",
+          "warning",
+        );
         return false;
       }
       if (!data.paymentMethod) {
-        notify("Método de pago", "Selecciona una pasarela o método de pago.", "warning");
+        notify(
+          "Método de pago",
+          "Selecciona una pasarela o método de pago.",
+          "warning",
+        );
         return false;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-        notify("Correo de factura", "Ingresa un correo electrónico válido para el comprobante.", "danger");
+        notify(
+          "Correo de factura",
+          "Ingresa un correo electrónico válido para el comprobante.",
+          "danger",
+        );
         return false;
       }
       if (!data.billingAddress.trim()) {
-        notify("Dirección requerida", "Ingresa tu dirección de correspondencia o facturación.", "warning");
+        notify(
+          "Dirección requerida",
+          "Ingresa tu dirección de correspondencia o facturación.",
+          "warning",
+        );
         return false;
       }
     }
@@ -831,8 +1352,15 @@ export default function App() {
 
   const next = () => {
     if (!validateStep(currentStep)) return;
-    if (currentStep === 3 && (data.userKind === "empresa" || data.profile === "corporativo")) {
-      notify("Asesoría recomendada", "Por tu selección empresarial, un especialista se pondrá en contacto pronto.", "info");
+    if (
+      currentStep === 3 &&
+      (data.userKind === "empresa" || data.profile === "corporativo")
+    ) {
+      notify(
+        "Asesoría recomendada",
+        "Por tu selección empresarial, un especialista se pondrá en contacto pronto.",
+        "info",
+      );
     }
     if (currentStep < 6) {
       setCurrentStep((step) => step + 1);
@@ -843,18 +1371,30 @@ export default function App() {
   const goBack = () => {
     if (currentStep > 1) {
       setCurrentStep((step) => step - 1);
-      notify("Paso anterior", "Tus datos se conservan intactos para que puedas modificarlos.", "info");
+      notify(
+        "Paso anterior",
+        "Tus datos se conservan intactos para que puedas modificarlos.",
+        "info",
+      );
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const requestQuote = () => {
     if (!data.name.trim()) {
-      notify("Nombre requerido", "Ingresa tu nombre para enviar la cotización.", "warning");
+      notify(
+        "Nombre requerido",
+        "Ingresa tu nombre para enviar la cotización.",
+        "warning",
+      );
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      notify("Correo inválido", "Ingresa un correo electrónico válido.", "danger");
+      notify(
+        "Correo inválido",
+        "Ingresa un correo electrónico válido.",
+        "danger",
+      );
       return;
     }
     if (!data.phone.trim()) {
@@ -862,23 +1402,42 @@ export default function App() {
       return;
     }
     if (!data.consent) {
-      notify("Consentimiento requerido", "Autoriza el tratamiento de datos para continuar.", "warning");
+      notify(
+        "Consentimiento requerido",
+        "Autoriza el tratamiento de datos para continuar.",
+        "warning",
+      );
       return;
     }
-    notify("¡Cotización enviada!", "Revisa tu bandeja de entrada en los próximos minutos.", "success");
+    notify(
+      "¡Cotización enviada!",
+      "Revisa tu bandeja de entrada en los próximos minutos.",
+      "success",
+    );
   };
 
   const finish = () => {
-    notify("¡Proceso completado!", "Gracias por confiar en Aurora Seguros.", "success");
+    notify(
+      "¡Proceso completado!",
+      "Gracias por confiar en Aurora Seguros.",
+      "success",
+    );
   };
 
-return (
+  return (
     <div className="app-shell d-flex flex-column min-vh-100">
-      
       {/* HEADER AL 100% DE ANCHO */}
-      <header className="site-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-white w-100 shadow-sm" role="banner">
+<header
+        className="site-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-white w-100 shadow-sm"
+        role="banner"
+      >
         {/* Logotipo de la marca */}
-        <button className="brand-lockup border-0 bg-transparent p-0" type="button" onClick={() => setStarted(false)} aria-label="Volver al inicio de Aurora Seguros">
+        <button
+          className="brand-lockup border-0 bg-transparent p-0"
+          type="button"
+          onClick={() => setStarted(false)}
+          aria-label="Volver al inicio de Aurora Seguros"
+        >
           <img
             src={logoAurora}
             alt="Aurora Seguros"
@@ -887,64 +1446,106 @@ return (
           />
         </button>
 
-        {/* Accesos rápidos superiores (Centro de Información + Asesoría en línea) */}
+        {/* Accesos rápidos superiores */}
         <div className="d-flex align-items-center gap-2">
-          <OverlayTrigger
-            placement="bottom"
-            trigger={["hover", "focus"]}
-            overlay={
-              <Tooltip id="tooltip-glosario">
-                Consulta conceptos, preguntas frecuentes y opiniones de otros clientes.
-              </Tooltip>
-            }
-          >
-            <button
-              type="button"
-              className="prototype-label badge bg-light text-dark border p-2"
-              style={{ cursor: "pointer", fontSize: "0.875rem" }}
-              onClick={() => setShowInfoModal(true)}
-              aria-label="Abrir centro de información"
+          
+          {/* VISTA DESKTOP / TABLET (Se muestra de md en adelante) */}
+          <div className="d-none d-md-flex align-items-center gap-2">
+            <OverlayTrigger
+              placement="bottom"
+              trigger={["hover", "focus"]}
+              overlay={
+                <Tooltip id="tooltip-glosario">
+                  Consulta conceptos, preguntas frecuentes y opiniones de otros
+                  clientes.
+                </Tooltip>
+              }
             >
-              Glosario & FAQs
-            </button>
-          </OverlayTrigger>
+              <button
+                type="button"
+                className="prototype-label badge bg-light text-dark border p-2"
+                style={{ cursor: "pointer", fontSize: "0.875rem" }}
+                onClick={() => setShowInfoModal(true)}
+                aria-label="Abrir centro de información"
+              >
+                Glosario & FAQs
+              </button>
+            </OverlayTrigger>
 
-          <OverlayTrigger
-            placement="bottom"
-            trigger={["hover", "focus"]}
-            overlay={
-              <Tooltip id="tooltip-asesoria">
-                Chatea o recibe orientación personalizada durante tu cotización.
-              </Tooltip>
-            }
-          >
-            <span
-              className="prototype-label badge bg-light text-dark border p-2"
-              tabIndex={0}
-              aria-label="Asesoría en línea"
-              style={{ cursor: "pointer", fontSize: "0.875rem" }}
+            <OverlayTrigger
+              placement="bottom"
+              trigger={["hover", "focus"]}
+              overlay={
+                <Tooltip id="tooltip-asesoria">
+                  Chatea o recibe orientación personalizada durante tu cotización.
+                </Tooltip>
+              }
             >
-              Asesoría en línea
-            </span>
-          </OverlayTrigger>
+              <span
+                className="prototype-label badge bg-light text-dark border p-2"
+                tabIndex={0}
+                aria-label="Asesoría en línea"
+                style={{ cursor: "pointer", fontSize: "0.875rem" }}
+              >
+                Asesoría en línea
+              </span>
+            </OverlayTrigger>
+          </div>
+
+          {/* VISTA MÓVIL (Solo se muestra en pantallas pequeñas con un menú desplegable) */}
+          <div className="d-flex d-md-none">
+            <Dropdown align="end">
+              <Dropdown.Toggle
+                variant="light"
+                size="sm"
+                className="prototype-label badge bg-light text-dark border p-2 d-flex align-items-center gap-1"
+                id="dropdown-ayuda-movil"
+                style={{ fontSize: "0.875rem" }}
+              >
+                <span>Ayuda</span>
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu className="shadow-sm">
+                <Dropdown.Item onClick={() => setShowInfoModal(true)}>
+                  Glosario & FAQs
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => {
+                  // Aquí puedes disparar la acción de asesoría en línea si manejas un estado o modal
+                }}>
+                  Asesoría en línea
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+
         </div>
       </header>
 
       {/* CONTENEDOR PRINCIPAL */}
       <main className="flex-grow-1 container py-4">
         {/* CONTENEDOR DE TOASTS FLOTANTES EN VIVO */}
-        <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1080 }}>
-          <Toast 
-            onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
-            show={toast.show} 
-            delay={4000} 
+        <ToastContainer
+          position="bottom-end"
+          className="p-3"
+          style={{ zIndex: 1080 }}
+        >
+          <Toast
+            onClose={() => setToast((prev) => ({ ...prev, show: false }))}
+            show={toast.show}
+            delay={4000}
             autohide
             bg={toast.variant}
           >
             <Toast.Header closeButton>
               <strong className="me-auto">{toast.title}</strong>
             </Toast.Header>
-            <Toast.Body className={toast.variant === "light" || toast.variant === "warning" ? "text-dark" : "text-white"}>
+            <Toast.Body
+              className={
+                toast.variant === "light" || toast.variant === "warning"
+                  ? "text-dark"
+                  : "text-white"
+              }
+            >
               {toast.message}
             </Toast.Body>
           </Toast>
@@ -955,42 +1556,74 @@ return (
         ) : (
           <section className="wizard-wrap" aria-labelledby="page-title">
             <div className="page-heading mb-3">
-              <p className="eyebrow text-uppercase small fw-bold mb-1 text-white">COTIZA A TU RITMO</p>
+              <p className="eyebrow text-uppercase small fw-bold mb-1 text-white">
+                COTIZA A TU RITMO
+              </p>
               <h1 id="page-title" className="h3">
-                Encuentra <span className="text-green">el seguro perfecto para ti</span>
+                Encuentra{" "}
+                <span className="text-green">el seguro perfecto para ti</span>
               </h1>
-              <p className="text-white">Avanza paso a paso, compara alternativas y ajusta tus respuestas cuando lo necesites.</p>
+              <p className="text-white">
+                Avanza paso a paso, compara alternativas y ajusta tus respuestas
+                cuando lo necesites.
+              </p>
             </div>
 
             <Card className="wizard-card shadow-sm">
               <Card.Body>
                 {/* Metadatos de progreso con porcentaje destacado */}
-                <div className="progress-meta d-flex justify-content-between align-items-center mb-2" aria-hidden="true">
-                  <span className="text-muted fw-semibold">Paso {currentStep} de 6</span>
+                <div
+                  className="progress-meta d-flex justify-content-between align-items-center mb-2"
+                  aria-hidden="true"
+                >
+                  <span className="text-muted fw-semibold">
+                    Paso {currentStep} de 6
+                  </span>
                   <span className="badge bg-success bg-opacity-10 text-success px-2 py-1 fw-bold fs-6">
                     {Math.round((currentStep / 6) * 100)}% completado
                   </span>
                 </div>
-                <ProgressBar 
-                  now={(currentStep / 6) * 100} 
-                  aria-label={`Progreso del formulario: Paso ${currentStep} de 6, ${Math.round((currentStep / 6) * 100)}% completado`} 
-                  className="wizard-progress mb-4" 
+                <ProgressBar
+                  now={(currentStep / 6) * 100}
+                  aria-label={`Progreso del formulario: Paso ${currentStep} de 6, ${Math.round((currentStep / 6) * 100)}% completado`}
+                  className="wizard-progress mb-4"
                 />
-                <StepIndicator currentStep={currentStep} onStepClick={(step) => setCurrentStep(step)} />
+                <StepIndicator
+                  currentStep={currentStep}
+                  onStepClick={(step) => setCurrentStep(step)}
+                />
 
                 <div className="step-heading d-flex justify-content-between align-items-center mb-3">
                   <div>
-                    <p className="eyebrow text-uppercase text-success medium fw-bold mb-0">PASO {currentStep}</p>
-                    <h2 className="h4 mb-0">{STEPS[currentStep - 1].title}: {STEPS[currentStep - 1].subtitle}</h2>
+                    <p className="eyebrow text-uppercase text-success medium fw-bold mb-0">
+                      PASO {currentStep}
+                    </p>
+                    <h2 className="h4 mb-0">
+                      {STEPS[currentStep - 1].title}:{" "}
+                      {STEPS[currentStep - 1].subtitle}
+                    </h2>
                   </div>
                   <Badge bg="light" text="dark" className="border">
-                    {currentStep === 6 ? "Último paso" : `${6 - currentStep} pasos restantes`}
+                    {currentStep === 6
+                      ? "Último paso"
+                      : `${6 - currentStep} pasos restantes`}
                   </Badge>
                 </div>
 
-                <Form onSubmit={(event) => { event.preventDefault(); next(); }} noValidate aria-label={`Formulario del paso ${currentStep}`}>
-                  {currentStep === 1 && <StepOne data={data} updateData={updateData} />}
-                  {currentStep === 2 && <StepTwo data={data} updateData={updateData} />}
+                <Form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    next();
+                  }}
+                  noValidate
+                  aria-label={`Formulario del paso ${currentStep}`}
+                >
+                  {currentStep === 1 && (
+                    <StepOne data={data} updateData={updateData} />
+                  )}
+                  {currentStep === 2 && (
+                    <StepTwo data={data} updateData={updateData} />
+                  )}
                   {currentStep === 3 && (
                     <StepThree
                       data={data}
@@ -999,21 +1632,31 @@ return (
                       onPurchase={() => {
                         if (!validateStep(3)) return;
                         setCurrentStep(4);
-                        notify("Continuemos", "Tus respuestas se conservan. Completa los datos requeridos.", "info");
+                        notify(
+                          "Continuemos",
+                          "Tus respuestas se conservan. Completa los datos requeridos.",
+                          "info",
+                        );
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     />
                   )}
-                  {currentStep === 4 && <StepFour data={data} updateData={updateData} />}
-                  {currentStep === 5 && <StepFive data={data} updateData={updateData} />}
-                  {currentStep === 6 && <StepSix data={data} updateData={updateData} />}
+                  {currentStep === 4 && (
+                    <StepFour data={data} updateData={updateData} />
+                  )}
+                  {currentStep === 5 && (
+                    <StepFive data={data} updateData={updateData} />
+                  )}
+                  {currentStep === 6 && (
+                    <StepSix data={data} updateData={updateData} />
+                  )}
 
                   <div className="wizard-actions d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
                     <ActionTooltip text="Vuelve al paso anterior sin perder ningún dato ingresado.">
-                      <Button 
-                        variant="outline-secondary" 
-                        onClick={goBack} 
-                        disabled={currentStep === 1} 
+                      <Button
+                        variant="outline-secondary"
+                        onClick={goBack}
+                        disabled={currentStep === 1}
                         type="button"
                         aria-label="Regresar al paso anterior"
                       >
@@ -1023,13 +1666,22 @@ return (
                     <div className="action-right">
                       {currentStep < 6 ? (
                         <ActionTooltip text="Valida la información y avanza al siguiente paso.">
-                          <Button variant="primary" type="submit" aria-label="Avanzar al siguiente paso">
+                          <Button
+                            variant="primary"
+                            type="submit"
+                            aria-label="Avanzar al siguiente paso"
+                          >
                             Siguiente →
                           </Button>
                         </ActionTooltip>
                       ) : (
                         <ActionTooltip text="Finaliza y envía tu solicitud de póliza.">
-                          <Button variant="success" type="button" onClick={finish} aria-label="Finalizar cotización">
+                          <Button
+                            variant="success"
+                            type="button"
+                            onClick={finish}
+                            aria-label="Finalizar cotización"
+                          >
                             Finalizar solicitud ✓
                           </Button>
                         </ActionTooltip>
@@ -1043,40 +1695,74 @@ return (
         )}
 
         {/* MODAL MULTIPESTAÑA: GLOSARIO, PREGUNTAS FRECUENTES Y TESTIMONIOS */}
-        <Modal 
-          show={showInfoModal} 
-          onHide={() => setShowInfoModal(false)} 
-          centered 
+        <Modal
+          show={showInfoModal}
+          onHide={() => setShowInfoModal(false)}
+          centered
           size="lg"
           scrollable
           aria-labelledby="info-modal-title"
         >
           <Modal.Header closeButton className="border-bottom">
-            <Modal.Title id="info-modal-title" className="h5 fw-bold" style={{ color: "#00875A" }}>
+            <Modal.Title
+              id="info-modal-title"
+              className="h5 fw-bold"
+              style={{ color: "#00875A" }}
+            >
               Centro de Ayuda Aurora Seguros
             </Modal.Title>
           </Modal.Header>
           <Modal.Body className="p-4">
-            <Tabs defaultActiveKey="glosario" id="info-modal-tabs" className="mb-4 custom-green-tabs">
-              
+            <Tabs
+              defaultActiveKey="glosario"
+              id="info-modal-tabs"
+              className="mb-4 custom-green-tabs"
+            >
               {/* PESTAÑA 1: GLOSARIO */}
               <Tab eventKey="glosario" title="📖 Glosario">
-                <p className="text-muted small mb-3">Términos esenciales para comprender tu póliza sin enredos:</p>
+                <p className="text-muted small mb-3">
+                  Términos esenciales para comprender tu póliza sin enredos:
+                </p>
                 <dl className="row g-3 small">
-                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Tomador</dt>
-                  <dd className="col-sm-8 mb-2">Persona natural o jurídica que contrata formalmente el seguro y sus condiciones.</dd>
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>
+                    Tomador
+                  </dt>
+                  <dd className="col-sm-8 mb-2">
+                    Persona natural o jurídica que contrata formalmente el
+                    seguro y sus condiciones.
+                  </dd>
 
-                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Asegurado</dt>
-                  <dd className="col-sm-8 mb-2">Persona o personas protegidas directamente bajo los beneficios de la póliza.</dd>
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>
+                    Asegurado
+                  </dt>
+                  <dd className="col-sm-8 mb-2">
+                    Persona o personas protegidas directamente bajo los
+                    beneficios de la póliza.
+                  </dd>
 
-                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Prima</dt>
-                  <dd className="col-sm-8 mb-2">Valor económico de la protección que se paga para mantener activa la cobertura.</dd>
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>
+                    Prima
+                  </dt>
+                  <dd className="col-sm-8 mb-2">
+                    Valor económico de la protección que se paga para mantener
+                    activa la cobertura.
+                  </dd>
 
-                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Código OTP</dt>
-                  <dd className="col-sm-8 mb-2">Clave numérica temporal de seguridad enviada para certificar tu identidad.</dd>
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>
+                    Código OTP
+                  </dt>
+                  <dd className="col-sm-8 mb-2">
+                    Clave numérica temporal de seguridad enviada para certificar
+                    tu identidad.
+                  </dd>
 
-                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>Declaración de Salud</dt>
-                  <dd className="col-sm-8 mb-0">Cuestionario donde se registra el estado médico general de los futuros asegurados.</dd>
+                  <dt className="col-sm-4 fw-bold" style={{ color: "#00875A" }}>
+                    Declaración de Salud
+                  </dt>
+                  <dd className="col-sm-8 mb-0">
+                    Cuestionario donde se registra el estado médico general de
+                    los futuros asegurados.
+                  </dd>
                 </dl>
               </Tab>
 
@@ -1084,23 +1770,35 @@ return (
               <Tab eventKey="faq" title="Preguntas Frecuentes">
                 <div className="accordion accordion-flush" id="faqAccordion">
                   <div className="mb-3">
-                    <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Puedo corregir mis datos si ya avancé de paso?</h6>
+                    <h6 className="fw-bold" style={{ color: "#00875A" }}>
+                      ¿Puedo corregir mis datos si ya avancé de paso?
+                    </h6>
                     <p className="small text-muted mb-0">
-                      Sí, usa el botón "Anterior" o haz clic directamente sobre los pasos anteriores en la barra superior. Tu información se conservará intacta.
+                      Sí, usa el botón "Anterior" o haz clic directamente sobre
+                      los pasos anteriores en la barra superior. Tu información
+                      se conservará intacta.
                     </p>
                   </div>
                   <hr />
                   <div className="mb-3">
-                    <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Mis datos personales se encuentran protegidos?</h6>
+                    <h6 className="fw-bold" style={{ color: "#00875A" }}>
+                      ¿Mis datos personales se encuentran protegidos?
+                    </h6>
                     <p className="small text-muted mb-0">
-                      Absolutamente. Cumplimos rigurosamente con normativas de confidencialidad y utilizamos validación de identidad mediante códigos OTP seguros.
+                      Absolutamente. Cumplimos rigurosamente con normativas de
+                      confidencialidad y utilizamos validación de identidad
+                      mediante códigos OTP seguros.
                     </p>
                   </div>
                   <hr />
                   <div className="mb-0">
-                    <h6 className="fw-bold" style={{ color: "#00875A" }}>¿Se efectuarán cobros reales en esta simulación?</h6>
+                    <h6 className="fw-bold" style={{ color: "#00875A" }}>
+                      ¿Se efectuarán cobros reales en esta simulación?
+                    </h6>
                     <p className="small text-muted mb-0">
-                      No. Este es un entorno de pruebas interactivo diseñado exclusivamente para que evalúes la experiencia de cotización sin cargos reales.
+                      No. Este es un entorno de pruebas interactivo diseñado
+                      exclusivamente para que evalúes la experiencia de
+                      cotización sin cargos reales.
                     </p>
                   </div>
                 </div>
@@ -1109,23 +1807,47 @@ return (
               {/* PESTAÑA 3: TESTIMONIOS */}
               <Tab eventKey="testimonios" title="Testimonios">
                 <p className="text-muted small mb-3">
-                  Descubre por qué nuestros clientes confían en la protección de Aurora Seguros:
+                  Descubre por qué nuestros clientes confían en la protección de
+                  Aurora Seguros:
                 </p>
                 <Row className="g-3">
                   <Col md={6}>
-                    <Card className="h-100 border p-3 rounded-3 shadow-sm" style={{ backgroundColor: "#F4FBF7", borderColor: "#D0EBDD" }}>
+                    <Card
+                      className="h-100 border p-3 rounded-3 shadow-sm"
+                      style={{
+                        backgroundColor: "#F4FBF7",
+                        borderColor: "#D0EBDD",
+                      }}
+                    >
                       <Card.Body className="p-0 d-flex flex-column justify-content-between">
                         <div>
                           <div className="d-flex justify-content-between align-items-center mb-2">
-                            <span className="fs-5" style={{ color: "#00875A" }}>“</span>
-                            <span className="fw-bold" style={{ color: "#00875A" }}>★ ★ ★ ★ ★</span>
+                            <span className="fs-5" style={{ color: "#00875A" }}>
+                              “
+                            </span>
+                            <span
+                              className="fw-bold"
+                              style={{ color: "#00875A" }}
+                            >
+                              ★ ★ ★ ★ ★
+                            </span>
                           </div>
                           <p className="small fst-italic text-dark mb-3">
-                            "Coticé el seguro para toda mi familia en pocos minutos. El proceso guiado es sumamente claro y transparente."
+                            "Coticé el seguro para toda mi familia en pocos
+                            minutos. El proceso guiado es sumamente claro y
+                            transparente."
                           </p>
                         </div>
-                        <div className="border-top pt-2" style={{ borderColor: "#D0EBDD" }}>
-                          <strong className="d-block small" style={{ color: "#00875A" }}>Carolina R.</strong>
+                        <div
+                          className="border-top pt-2"
+                          style={{ borderColor: "#D0EBDD" }}
+                        >
+                          <strong
+                            className="d-block small"
+                            style={{ color: "#00875A" }}
+                          >
+                            Carolina R.
+                          </strong>
                           <small className="text-muted">Plan Familiar</small>
                         </div>
                       </Card.Body>
@@ -1133,33 +1855,57 @@ return (
                   </Col>
 
                   <Col md={6}>
-                    <Card className="h-100 border p-3 rounded-3 shadow-sm" style={{ backgroundColor: "#F4FBF7", borderColor: "#D0EBDD" }}>
+                    <Card
+                      className="h-100 border p-3 rounded-3 shadow-sm"
+                      style={{
+                        backgroundColor: "#F4FBF7",
+                        borderColor: "#D0EBDD",
+                      }}
+                    >
                       <Card.Body className="p-0 d-flex flex-column justify-content-between">
                         <div>
                           <div className="d-flex justify-content-between align-items-center mb-2">
-                            <span className="fs-5" style={{ color: "#00875A" }}>“</span>
-                            <span className="fw-bold" style={{ color: "#00875A" }}>★ ★ ★ ★ ★</span>
+                            <span className="fs-5" style={{ color: "#00875A" }}>
+                              “
+                            </span>
+                            <span
+                              className="fw-bold"
+                              style={{ color: "#00875A" }}
+                            >
+                              ★ ★ ★ ★ ★
+                            </span>
                           </div>
                           <p className="small fst-italic text-dark mb-3">
-                            "La atención digital y la opción de descargar la cotización en PDF facilitó la toma de decisiones en nuestra empresa."
+                            "La atención digital y la opción de descargar la
+                            cotización en PDF facilitó la toma de decisiones en
+                            nuestra empresa."
                           </p>
                         </div>
-                        <div className="border-top pt-2" style={{ borderColor: "#D0EBDD" }}>
-                          <strong className="d-block small" style={{ color: "#00875A" }}>Mateo V.</strong>
-                          <small className="text-muted">Seguro Corporativo</small>
+                        <div
+                          className="border-top pt-2"
+                          style={{ borderColor: "#D0EBDD" }}
+                        >
+                          <strong
+                            className="d-block small"
+                            style={{ color: "#00875A" }}
+                          >
+                            Mateo V.
+                          </strong>
+                          <small className="text-muted">
+                            Seguro Corporativo
+                          </small>
                         </div>
                       </Card.Body>
                     </Card>
                   </Col>
                 </Row>
               </Tab>
-
             </Tabs>
           </Modal.Body>
           <Modal.Footer className="border-top">
-            <Button 
-              variant="success" 
-              size="sm" 
+            <Button
+              variant="success"
+              size="sm"
               onClick={() => setShowInfoModal(false)}
               style={{ backgroundColor: "#00875A", borderColor: "#00875A" }}
             >
@@ -1170,28 +1916,52 @@ return (
       </main>
 
       {/* FOOTER CORPORATIVO CON TEXTO COMPLETAMENTE BLANCO */}
-    <footer className="text-white py-4 mt-auto w-100" style={{ backgroundColor: "#001016" }}>
+      <footer
+        className="text-white py-4 mt-auto w-100"
+        style={{ backgroundColor: "#001016" }}
+      >
         <div className="container">
           <Row className="gy-3 align-items-center">
             <Col md={4} className="text-center text-md-start">
-              <span className="fw-bold text-uppercase tracking-wider text-white" style={{ fontSize: "0.95rem" }}>
+              <span
+                className="fw-bold text-uppercase tracking-wider text-white"
+                style={{ fontSize: "0.95rem" }}
+              >
                 Aurora Seguros S.A.
               </span>
               <p className="small text-white-50 mb-0 mt-1">
-                NIT: 900.842.119-5 · Vigilado Superintendencia Financiera de Colombia.
+                NIT: 900.842.119-5 · Vigilado Superintendencia Financiera de
+                Colombia.
               </p>
             </Col>
             <Col md={4} className="text-center small text-white-50">
               <p className="mb-1">Línea de atención nacional: 01 8000 954321</p>
-              <p className="mb-0">Sede Principal: Cra. 7 # 72-41, Bogotá D.C.</p>
+              <p className="mb-0">
+                Sede Principal: Cra. 7 # 72-41, Bogotá D.C.
+              </p>
             </Col>
             <Col md={4} className="text-center text-md-end small">
               <div className="d-flex justify-content-center justify-content-md-end gap-3 text-white-50">
-                <span className="text-white" style={{ cursor: "pointer" }} onClick={() => setShowInfoModal(true)}>Términos y Condiciones</span>
+                <span
+                  className="text-white"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setShowInfoModal(true)}
+                >
+                  Términos y Condiciones
+                </span>
                 <span>·</span>
-                <span className="text-white" style={{ cursor: "pointer" }} onClick={() => setShowInfoModal(true)}>Política de Privacidad</span>
+                <span
+                  className="text-white"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setShowInfoModal(true)}
+                >
+                  Política de Privacidad
+                </span>
               </div>
-              <p className="text-white-50 mb-0 mt-1" style={{ fontSize: "0.75rem" }}>
+              <p
+                className="text-white-50 mb-0 mt-1"
+                style={{ fontSize: "0.75rem" }}
+              >
                 © 2026 Aurora Seguros. Todos los derechos reservados.
               </p>
             </Col>
@@ -1199,16 +1969,5 @@ return (
         </div>
       </footer>
     </div>
-
-
-
-
   );
-
-
-
-
-
-
-  
 }
